@@ -1,6 +1,6 @@
 # ofluidata
 
-React components that wraps up <a href="https://developer.microsoft.com/en-us/fluentui#/">Microsoft Fluent Design</a> and <a href="https://www.odata.org/">OData</a>.
+<a href="https://reactjs.org/">React</a> list and form components that wraps up <a href="https://developer.microsoft.com/en-us/fluentui#/">Microsoft Fluent Design</a> and <a href="https://www.odata.org/">OData</a>.
 
 Install with npm:
 
