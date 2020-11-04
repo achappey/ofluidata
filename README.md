@@ -24,8 +24,12 @@ List component:
 ```javascript
 import { OFluiList } from 'ofluidata';
 
-const url: string = "Your OData url"; // Ex. https://services.odata.org/V3/(S(readwrite))/OData/OData.svc
-const entityType: string = "Your Entity Type Name (incl Namespace)"; // Ex. ODataDemo.Product
+const url: string = "Your OData url"; 
+// Ex. https://services.odata.org/V3/(S(readwrite))/OData/OData.svc
+
+const entityType: string = "Your Entity Type Name (incl Namespace)"; 
+// Ex. ODataDemo.Product
+
 const options: OFluiListOptions | undefined = {}; 
 
 <OFluiList url={url}
