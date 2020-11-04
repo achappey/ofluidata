@@ -11,6 +11,7 @@ npm i ofluidata --save
 ## Demos
 
 <a href="https://achappey.github.io/ofluidata-storybook/?path=/story/list--default">Default List</a> - 
+<a href="https://achappey.github.io/ofluidata-storybook/?path=/story/list--custom-views">Custom Views</a> -
 <a href="https://achappey.github.io/ofluidata-storybook/?path=/story/odata-org-northwind">Northwind</a> -
 <a href="https://achappey.github.io/ofluidata-storybook/?path=/story/odata-org-odatademo">ODataDemo</a> -
 <a href="https://achappey.github.io/ofluidata-storybook/?path=/story/odata-org-trippin">TripPin</a>
