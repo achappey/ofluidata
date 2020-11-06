@@ -11,14 +11,12 @@ export class ODataLoader {
         return this.httpClient
             .get(this.baseUrl)
             .then(data => this.httpClient
-                .getMetadata(ensureProtocol(this.baseUrl,
-                    discoverMetadata(this.baseUrl, data)))
-                .then(result => {
-                    return {
-                        endpoints: data.value,
-                        metadata: toODataMetadata(result)
-                    }
-                })
+                .getMetadata(
+                    ensureProtocol(this.baseUrl,
+                        discoverMetadata(this.baseUrl, data)))
+                .then(result =>
+                    new ODataConfig(data.value,
+                        toODataMetadata(result)))
             );
     }
 

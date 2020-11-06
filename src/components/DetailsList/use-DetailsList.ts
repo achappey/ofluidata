@@ -1,7 +1,7 @@
 import { useState } from "react";
 import {
     ContextualMenuItemType, DirectionalHint,
-    IColumn, IContextualMenuItem, Selection
+    IColumn, IContextualMenuItem
 } from "@fluentui/react";
 import { useTranslation } from "react-i18next";
 
@@ -17,20 +17,15 @@ export default (properties: Property[],
     query: Query,
     items: any[],
     onQueryChange: (query: Query) => void,
-    onSelectionChanged: (selection: any[]) => void,
+    itemTitleColumn?: string,
     onNextPage?: () => void,
-    getFilterOptions?: (property: Property) => Promise<any[]>) => {
+    getFilterOptions?: (property: Property) => Promise<any[]>,
+    onItemClick?: (item: any) => void) => {
 
     const [filterPanelProperty, setFilterPanelProperty] = useState<Property | undefined>(undefined);
     const [columns] = useState<IColumn[]>(properties.map(toColumn));
     const [contextMenuColumn, setContextMenuColumn] = useState<OFluiContaxtMenuColumn | undefined>(undefined);
     const { t } = useTranslation();
-
-    const selectionChanged = () => onSelectionChanged(selection.getSelection());
-
-    const selection: Selection = new Selection({
-        onSelectionChanged: selectionChanged
-    });
 
     const onColumnHeaderDismiss = () => setContextMenuColumn(undefined);
 
@@ -195,13 +190,20 @@ export default (properties: Property[],
             });
     }
 
+    const titleColumn = onItemClick != undefined
+        ? itemTitleColumn != undefined
+            ? itemTitleColumn
+            : columns[0].name
+        : undefined;
+
     return {
         currentItems,
         currentColumns,
         contextualItemProps,
         showFilterPanel,
         filterPanelProperty,
-        selection,
+        titleColumn,
+        onItemClick,
         getFilterPanelConfig,
         applyFilters,
         dismissFilterPanel,

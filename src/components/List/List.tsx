@@ -2,7 +2,7 @@
 import React from 'react';
 
 import HttpContext from '../../context/HttpContext';
-import { View } from '../../types/OFlui';
+import { OFluiListOptions } from '../../types/OFlui';
 import { OFluiListWrapper } from './ListWrapper';
 
 export type OFluiListProps = {
@@ -11,13 +11,6 @@ export type OFluiListProps = {
     options?: OFluiListOptions,
 }
 
-export type OFluiListOptions = {
-    views?: View[],
-    image?: string,
-    translations?: any,
-    language?: string,
-    onNewItem?: () => Promise<any>,
-}
 
 export const OFluiList = (props: OFluiListProps) => {
     return (

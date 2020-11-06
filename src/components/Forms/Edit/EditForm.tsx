@@ -26,7 +26,7 @@ export const OFluiEditForm = (props: OFluiEditFormProps) => {
         props.onChange(updatedItem);
     };
 
-    const formFields = props.properties.map((t, i) => {
+    const formFields = item != undefined ? props.properties.map((t, i) => {
         const value = item[t.name];
 
         const onPropertyChange = (newValue?: any) => onChange(t, newValue);
@@ -39,7 +39,7 @@ export const OFluiEditForm = (props: OFluiEditFormProps) => {
                 value={value}
             />
         </Stack.Item>
-    });
+    }) : <></>;
 
     return (
         <Stack>

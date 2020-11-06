@@ -1,6 +1,10 @@
 
 import React from 'react';
-import { ContextualMenu, DetailsList, IColumn, SpinnerSize } from '@fluentui/react';
+import {
+    ContextualMenu, DetailsList, IColumn, Selection,
+    IRenderFunction, IDetailsHeaderProps, SpinnerSize,
+    ITooltipHostProps, TooltipHost, StickyPositionType, Sticky, Link
+} from '@fluentui/react';
 
 import { useLanguage } from '../../hooks/use-language';
 import useDetailsList from './use-DetailsList';
@@ -13,11 +17,15 @@ export type OFluiDetailsListProps = {
     items: any[],
     properties: Property[],
     query: Query,
+    entityKey: string,
     onQueryChange: (query: Query) => void,
-    onSelectionChanged: (selection: any[]) => void,
     getFilterOptions: (property: Property) => Promise<any[]>,
-    onNextPage?: () => void,
+    itemTitleColumn?: string,
+    stickyHeader?: boolean,
     language?: string
+    onNextPage?: () => void,
+    onItemClick?: (item: any) => void,
+    selection?: Selection
 }
 
 export const OFluiDetailsList = (props: OFluiDetailsListProps) => {
@@ -28,7 +36,8 @@ export const OFluiDetailsList = (props: OFluiDetailsListProps) => {
         showFilterPanel,
         currentItems,
         filterPanelProperty,
-        selection,
+        titleColumn,
+        onItemClick,
         getFilterPanelConfig,
         applyFilters,
         dismissFilterPanel,
@@ -36,18 +45,27 @@ export const OFluiDetailsList = (props: OFluiDetailsListProps) => {
             props.query,
             props.items,
             props.onQueryChange,
-            props.onSelectionChanged,
+            props.itemTitleColumn,
             props.onNextPage,
-            props.getFilterOptions);
+            props.getFilterOptions,
+            props.onItemClick);
 
     const renderItemColumn = (item: any, _index: number, column: IColumn) => {
         const value = item[column.key];
         const property = props.properties.find(d => d.name == column.key)!;
 
-        return <OFluiDisplayField
-            value={value}
-            property={property}
-        />;
+        return titleColumn == undefined
+            || titleColumn != column.key
+            || onItemClick == undefined ?
+            <OFluiDisplayField
+                value={value}
+                property={property}
+            />
+            :
+            <Link
+                onClick={() => onItemClick(item)}>
+                {value}
+            </Link>;
     };
 
     const nextPage = () => {
@@ -58,12 +76,33 @@ export const OFluiDetailsList = (props: OFluiDetailsListProps) => {
             text={""} />
     }
 
+    const renderHeader = (detailsHeaderProps: IDetailsHeaderProps,
+        defaultRender: IRenderFunction<IDetailsHeaderProps>) => {
+        const content = defaultRender({
+            ...detailsHeaderProps,
+            onRenderColumnHeaderTooltip: (tooltipHostProps: ITooltipHostProps) => (
+                <TooltipHost {...tooltipHostProps} />
+            )
+        });
+
+        return props.stickyHeader ?
+            <Sticky stickyPosition={StickyPositionType.Header} >
+                {content}
+            </Sticky>
+            :
+            <>
+                {content}
+            </>;
+    };
+
     return (
         <>
             <DetailsList items={currentItems}
                 onRenderItemColumn={renderItemColumn}
                 onRenderMissingItem={nextPage}
-                selection={selection}
+                selection={props.selection}
+                setKey={props.entityKey}
+                onRenderDetailsHeader={renderHeader}
                 onColumnHeaderClick={onColumnHeaderClick}
                 columns={currentColumns}
             />

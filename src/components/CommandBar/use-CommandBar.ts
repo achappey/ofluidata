@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { ICommandBarItemProps } from '@fluentui/react';
 import { toCommandBarItems } from '../../services/OFluiMapper';
-import { View } from '../../types/OFlui';
+import { OFluiView } from '../../types/OFlui';
 import { useLanguage } from '../../hooks/use-language';
 
-const getDefaultView = (views?: View[], defaultView?: string) => {
+const getDefaultView = (views?: OFluiView[], defaultView?: string) => {
     const hasViews = views != undefined && views.length > 0;
 
     return defaultView != undefined && hasViews ?
@@ -12,11 +12,11 @@ const getDefaultView = (views?: View[], defaultView?: string) => {
         : hasViews ? views![0] : undefined;
 };
 
-export default (views?: View[],
+export default (views?: OFluiView[],
     defaultViewKey?: string,
     language?: string,
     search?: (query: string) => void,
-    viewChange?: (view: View | undefined) => void) => {
+    viewChange?: (view: OFluiView | undefined) => void) => {
     const { t } = useLanguage(language);
     const [searchQuery, setSearchQuery] = useState<string | undefined>(undefined);
     const defaultView = getDefaultView(views, defaultViewKey);

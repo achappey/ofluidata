@@ -43,7 +43,8 @@ export class HttpService implements HttpClient {
     }
 
     private handleError = (error: any) => {
-        throw new Error(error.response.data.error.message);
+        throw error.response ? new Error(error.response.data.error.message)
+            : error;
     }
 
 }

@@ -1,20 +1,22 @@
 import * as React from 'react';
-import { DefaultButton, Panel, PrimaryButton } from '@fluentui/react';
+import { DefaultButton, PrimaryButton } from '@fluentui/react';
 
-import { OFluiEditForm } from '../../Forms/Edit/EditForm';
-import { OFluiErrorMessageBar } from '../../MessageBar/Error/ErrorMessageBar';
-import { OFluiSpinner } from '../../Spinner/Spinner';
 import { useEditPanel } from '../../../hooks/use-edit-panel';
 import { OFluiPanelBase } from '../../../types/OFlui';
+import { OFluiEditForm } from '../../Forms/Edit/EditForm';
+import { OFluiErrorMessageBar } from '../../MessageBar/Error/ErrorMessageBar';
+import { OFluiItemPanel } from '../ItemPanel/ItemPanel';
+import { OFluiSpinner } from '../../Spinner/Spinner';
 import { Property } from '../../../types/OData';
 
-export interface OFluiNewItemPanelProps extends OFluiPanelBase {
+export interface OFluiEditItemPanelProps extends OFluiPanelBase {
+    item: any,
     properties: Property[],
-    entityTypeName: string,
     onSave: (item: any) => Promise<void>,
+    image?: string,
 }
 
-export const OFluiNewItemPanel = (props: OFluiNewItemPanelProps) => {
+export const OFluiEditItemPanel = (props: OFluiEditItemPanelProps) => {
     const { item,
         isValid,
         spinnerText,
@@ -44,24 +46,22 @@ export const OFluiNewItemPanel = (props: OFluiNewItemPanelProps) => {
     }
 
     return (
-        <Panel isFooterAtBottom={true}
-            onRenderFooterContent={renderFooter}
-            onDismiss={props.onDismiss}
-            headerText={`${t('new')} ${props.entityTypeName}`}
-            isOpen={props.isOpen}>
+        <OFluiItemPanel {...props}
+            onRenderFooterContent={renderFooter}>
 
             <OFluiErrorMessageBar
                 errorMessage={errorMessage}
             />
 
             {
-                isLoading ? <OFluiSpinner text={spinnerText} />
+                isLoading
+                    ? <OFluiSpinner text={spinnerText} />
                     : <OFluiEditForm item={item}
                         onChange={onChange}
                         properties={props.properties}
                     />
             }
 
-        </Panel>
+        </OFluiItemPanel>
     );
 };

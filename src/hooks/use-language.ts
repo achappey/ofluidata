@@ -13,5 +13,5 @@ export const useLanguage = ((language?: string) => {
 
     }, [language]);
 
-    return { t };
+    return { t, i18n };
 });

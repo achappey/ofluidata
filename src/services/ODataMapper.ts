@@ -4,7 +4,7 @@ import {
     ODataMetadata, Property,
     PropertyType, Query
 } from "../types/OData";
-import { FieldValidation, View } from "../types/OFlui";
+import { FieldValidation } from "../types/OFlui";
 
 export const validateField = (property: Property, value: any) => {
     const isValid = property.required
@@ -31,18 +31,6 @@ export const toUrlValue = (value: any, property: Property): string => {
 }
 
 
-export const getDefaultViews = (entity: EntityType): View[] => {
-    return entity.entitySets!.map(g => {
-        return {
-            id: g.name!,
-            entitySet: g.name!,
-            name: g.name!,
-            query: {
-                fields: entity.properties.map(f => f.name),
-            }
-        };
-    })
-}
 
 const toFilters = (filters?: Filter[]): string => {
     const groupedFilter = filters != undefined
@@ -78,10 +66,26 @@ export const toSearchFilter = (property: Property, query: string, dataVersion: s
         case "4.0":
             return `contains(tolower(${property.name}), '${query}')`;
         default:
-            return `substringof('${query}', tolower(${property.name}))`;
+            return `substringof('${query}', ${property.name})`;
     }
 }
-export const extractNextLink = (baseUrl: string, data: any) => {
+
+export const addODataType = (itemType: string, item: any, dataVersion: string): string => {
+    switch (dataVersion) {
+        case "4.0":
+            return {
+                ...item,
+                ["@odata.type"]: itemType
+            }
+        default:
+            return {
+                ...item,
+                ["odata.type"]: itemType
+            };
+    }
+}
+
+export const withNextLink = (data: any, baseUrl: string) => {
     let nextLink = data["@odata.nextLink"] != undefined ? data["@odata.nextLink"]
         : data["odata.nextLink"] != undefined ? data["odata.nextLink"]
             : undefined;
@@ -90,7 +94,10 @@ export const extractNextLink = (baseUrl: string, data: any) => {
         nextLink = `${baseUrl}/${nextLink}`;
     }
 
-    return nextLink;
+    return {
+        ...data,
+        nextLink: nextLink
+    };
 }
 
 export const discoverMetadata = (baseUrl: string, data: any) => {
@@ -225,13 +232,14 @@ export const toODataMetadata = (document: XMLDocument): ODataMetadata => {
 
             const key = t.querySelector("Key PropertyRef");
 
-            entityTypes[`${g.getAttribute("Namespace")}.${t.getAttribute("Name")}`] = {
-                properties: getProperties(t),
-                name: t.getAttribute("Name"),
-                key: key != undefined ? key.getAttribute("Name") : undefined,
-                baseType: t.getAttribute("BaseType"),
-                entitySets: []
-            };
+            const fullName = `${g.getAttribute("Namespace")}.${t.getAttribute("Name")}`;
+
+            entityTypes[fullName] =
+                new EntityType(t.getAttribute("Name"),
+                    fullName,
+                    getProperties(t),
+                    t.getAttribute("BaseType"),
+                    key != undefined ? key.getAttribute("Name") : undefined);
         });
 
         complexElements.forEach(t => {

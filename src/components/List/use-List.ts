@@ -1,15 +1,19 @@
 import { useEffect, useState } from 'react';
-import { flatten, ICommandBarItemProps } from '@fluentui/react';
+import { flatten, Selection, ICommandBarItemProps } from '@fluentui/react';
 
 import { useLanguage } from '../../hooks/use-language';
 import { useProgress } from '../../hooks/use-progress';
-import { extractNextLink, getDefaultViews, groupyBy } from '../../services/ODataMapper';
-import { ODataService } from '../../services/ODataService';
-import { Order, Property, Query } from '../../types/OData';
-import { View } from '../../types/OFlui';
-import { OFluiListOptions } from './List';
+import { Property, Query } from '../../types/OData';
+import {
+    OFluiListOptions, OFluiPanelType, OFluiView
+} from '../../types/OFlui';
+import { OFluiNewItemPanelProps } from '../Panels/NewItemPanel/NewItemPanel';
+import { OFluiEditItemPanelProps } from '../Panels/EditItemPanel/EditItemPanel';
+import { OFluiDisplayItemPanelProps } from '../Panels/DisplayItemPanel/DisplayItemPanel';
+import { ListDataService } from '../../services/ListDataService';
+import { toFieldGroups } from '../../services/OFluiMapper';
 
-export default (service: ODataService,
+export default (service: ListDataService,
     options: OFluiListOptions) => {
 
     const { t } = useLanguage(options.language);
@@ -18,26 +22,32 @@ export default (service: ODataService,
 
     const { progressIndicator, processItems } = useProgress();
 
-    const listViews = options.views != undefined && options.views.length > 0 ? options.views : getDefaultViews(entityType);
+    const listViews = options.views != undefined && options.views.length > 0 ? options.views : service.getDefaultViews();
 
     const [errorMessage, setErrorMessage] = useState<string | string[] | undefined>(undefined);
     const [nextPageLink, setNextPageLink] = useState<string | undefined>(undefined);
     const [items, setItems] = useState<any[] | undefined>(undefined);
-    const [currentView, setCurrentView] = useState<View>(listViews[0]);
-    const [showNewForm, setShowNewForm] = useState<boolean>(false);
+    const [currentView, setCurrentView] = useState<OFluiView>(listViews[0]);
     const [selectedItems, setSelectedItems] = useState<any[]>([]);
+    const [currentPanel, setCurrentPanel] = useState<OFluiNewItemPanelProps
+        | OFluiEditItemPanelProps
+        | OFluiDisplayItemPanelProps | undefined>(undefined);
 
     useEffect(() => {
         getData(currentView.entitySet, currentView.query);
     }, []);
 
-    const onSelectionChanged = (items: any[]) => setSelectedItems(items);
+
+    const selectionChanged = () => setSelectedItems(selection.getSelection());
+
+    const selection: Selection = new Selection({
+        onSelectionChanged: selectionChanged
+    });
 
     const onSearch = (query: string) => {
         if (query != null && query.length > 0) {
             service
-                .searchItems(
-                    entityType.entitySets![0]!.name!,
+                .searchListItems(
                     query.toLowerCase()
                 )
                 .then(data => setItems(data))
@@ -52,19 +62,14 @@ export default (service: ODataService,
         return service.getItems(entitySet, query)
             .then(data => {
                 setItems(data.value);
-                setNextPageLink(
-                    extractNextLink(service.baseUrl, data));
+                setNextPageLink(data.nextLink);
             })
             .catch(e => setErrorMessage(e.toString()));
     };
 
-    const deleteItem = (item: any) => service.deleteItem
-        (
-            currentView.entitySet,
-            item,
-            entityType.properties
-                .find(e => e.name == entityType.key)!
-        );
+    const deleteItem = (item: any) => service.deleteListItem(item);
+
+    const keyProperty = entityType.keyPropertyName;
 
     const deleteSelectedItems = () => {
         processItems(
@@ -86,11 +91,11 @@ export default (service: ODataService,
                     .filter(r =>
                         // Not delete failed
                         deleteFailed
-                            .find(d => d[entityType.key!] == r[entityType.key!]) != undefined
+                            .find(d => d[keyProperty] == r[keyProperty]) != undefined
                         ||
                         // Not selected
                         selectedItems
-                            .find(d => d[entityType.key!] == r[entityType.key!]) == undefined))
+                            .find(d => d[keyProperty] == r[keyProperty]) == undefined))
             });
     }
 
@@ -100,7 +105,15 @@ export default (service: ODataService,
                 key: "newItem",
                 text: t("new"),
                 iconProps: { iconName: "Add" },
-                onClick: () => setShowNewForm(true)
+                onClick: () => setCurrentPanel({
+                    panelType: OFluiPanelType.newItem,
+                    isOpen: true,
+                    onPanelOpened: onNewItemOpened,
+                    onDismiss: () => setCurrentPanel(undefined),
+                    properties: entityType.properties,
+                    entityTypeName: entityType.name!,
+                    onSave: onSaveNewItem
+                })
             },
             {
                 key: "deleteItem",
@@ -111,7 +124,7 @@ export default (service: ODataService,
             }
         ];
 
-    const onViewChange = (view: View | undefined) => {
+    const onViewChange = (view: OFluiView | undefined) => {
         const newView = view != undefined ? view : listViews[0];
 
         setCurrentView(newView);
@@ -128,33 +141,16 @@ export default (service: ODataService,
         getData(currentView.entitySet, newQuery);
     };
 
-    const getFilterOptions = async (property: Property) => {
-        const data: any = await service.getItems(currentView.entitySet,
+    const getFilterOptions = (property: Property) => service
+        .getFilterOptions(currentView.entitySet,
             {
                 ...currentView.query,
-                fields: [property.name],
                 filters: currentView.query.filters != undefined ?
                     currentView.query.filters.filter(r => r.property.name != property.name)
                     : undefined,
-                order: {
-                    [property.name]: Order.Ascending
-                }
-            });
-
-        const result: any[] = data.value;
-
-        let nextLink = extractNextLink(service.baseUrl, data);
-
-        while (nextLink != undefined) {
-            const nextPage = await service.getNextPage(nextLink);
-
-            result.push(...nextPage.value);
-
-            nextLink = extractNextLink(service.baseUrl, nextPage)
-        }
-
-        return Object.keys(groupyBy(result, property.name));
-    }
+            },
+            property
+        );
 
     const viewProperties = entityType.properties
         .filter(i => currentView.query.fields.indexOf(i.name) > -1);
@@ -171,25 +167,19 @@ export default (service: ODataService,
                             ...data.value
                         ]
                     );
-                    setNextPageLink(
-                        extractNextLink(service.baseUrl,
-                            data
-                        )
-                    );
+
+                    setNextPageLink(data.nextLink);
                 })
                 .catch(e => setErrorMessage(e.toString()));
-
         }
         : undefined;
 
-    const onDismissNewForm = () => setShowNewForm(false);
-
     const onSaveNewItem = (item: any) => service
-        .createItem(currentView.entitySet, item)
+        .createListItem(item)
         .then(h => {
             setItems([h, ...items!]);
 
-            setShowNewForm(false);
+            setCurrentPanel(undefined);
         });
 
     const onNewItemOpened = async (): Promise<any> => {
@@ -199,6 +189,37 @@ export default (service: ODataService,
 
     const onDismissError = () => setErrorMessage(undefined);
 
+    const showItemDisplayForm = (item: any) => setCurrentPanel({
+        panelType: OFluiPanelType.displayItem,
+        isOpen: true,
+        groups: toFieldGroups(entityType, options.formOptions),
+        image: options.image,
+        headerProperties: entityType.properties.length > 2 ? {
+            titleProperty: entityType.properties[0].name,
+            descriptionProperty: entityType.properties[1].name,
+            secondaryDescriptionProperty: entityType.properties[2].name
+        } : undefined,
+        onRender: options.formOptions
+            && options.formOptions[entityType.typeName!] ?
+            options.formOptions[entityType.typeName!].onRenderDisplayForm : undefined,
+        item: item,
+        onPanelOpened: async () => item,
+        onDismiss: () => setCurrentPanel(undefined),
+        onDelete: (item: any) => deleteItem(item)
+            .then(() => {
+                const newItems = items!
+                    .filter(r => r[keyProperty] != item[keyProperty]);
+
+                setItems(newItems);
+
+                selection.setAllSelected(false);
+
+                setCurrentPanel(undefined);
+            }),
+        onSave: async (item: any) => console.log(item)
+    });
+
+
     return {
         items,
         listViews,
@@ -206,20 +227,18 @@ export default (service: ODataService,
         currentView,
         viewProperties,
         commandBarItems,
-        showNewForm,
-        entityType,
         progressIndicator,
-        t,
+        currentPanel,
+        keyProperty,
+        selection,
+        options,
+        showItemDisplayForm,
         onDismissError,
-        onSelectionChanged,
-        onNewItemOpened,
-        onSaveNewItem,
-        onDismissNewForm,
         getFilterOptions,
         getNextPage,
         onViewChange,
         onQueryChange,
         getData,
-        onSearch
+        onSearch, t
     };
 }

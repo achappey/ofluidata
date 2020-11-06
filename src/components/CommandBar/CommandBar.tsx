@@ -7,16 +7,16 @@ import {
 } from '@fluentui/react';
 
 import useCommandBar from './use-CommandBar';
-import { View } from '../../types/OFlui';
+import { OFluiView } from '../../types/OFlui';
 
 export type OFluiCommandBarProps = {
     items: ICommandBarItemProps[],
-    views?: View[],
+    views?: OFluiView[],
     defaultView?: string,
     language?: string,
     image?: string,
     onSearch?: (query: string) => void,
-    onViewChange?: (view: View | undefined) => void,
+    onViewChange?: (view: OFluiView | undefined) => void,
 }
 
 export const OFluiCommandBar = (props: OFluiCommandBarProps) => {

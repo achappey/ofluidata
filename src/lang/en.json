@@ -5,6 +5,7 @@
   "clear": "Clear",
   "new": "New",
   "save": "Save",
+  "edit": "Edit",
   "cancel": "Cancel",
   "searching": "Search: {{query}}",
   "export": "Export",
