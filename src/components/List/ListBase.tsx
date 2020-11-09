@@ -31,6 +31,7 @@ export const OFluiListBase = (props: OFluiListBaseProps) => {
         keyProperty,
         selection,
         options,
+        allProperties,
         showItemDisplayForm,
         onDismissError,
         getFilterOptions,
@@ -56,10 +57,12 @@ export const OFluiListBase = (props: OFluiListBaseProps) => {
     const mainContent = progressIndicator != undefined
         ? <ProgressIndicator {...progressIndicator} />
         : items != undefined
-            ? <OFluiDetailsList
-                properties={viewProperties}
+               ? 
+            <OFluiDetailsList
+                viewProperties={viewProperties}
                 query={currentView.query}
                 items={items}
+                allProperties={allProperties}
                 selection={selection}
                 entityKey={keyProperty}
                 stickyHeader={options.stickyHeader}
@@ -68,7 +71,8 @@ export const OFluiListBase = (props: OFluiListBaseProps) => {
                 getFilterOptions={getFilterOptions}
                 onQueryChange={onQueryChange}
             />
-            : <OFluiSpinner
+            : 
+            <OFluiSpinner
                 text={t('viewLoading', { name: currentView.name })} />;
 
     return (

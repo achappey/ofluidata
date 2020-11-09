@@ -152,8 +152,8 @@ export default (service: ListDataService,
             property
         );
 
-    const viewProperties = entityType.properties
-        .filter(i => currentView.query.fields.indexOf(i.name) > -1);
+    const viewProperties = currentView.query.fields
+        .map(n => entityType.properties.find(z => z.name == n)!);
 
     const getNextPage = nextPageLink != undefined
         ? () => {
@@ -219,6 +219,7 @@ export default (service: ListDataService,
         onSave: async (item: any) => console.log(item)
     });
 
+    const allProperties = entityType.properties;
 
     return {
         items,
@@ -232,6 +233,7 @@ export default (service: ListDataService,
         keyProperty,
         selection,
         options,
+        allProperties,
         showItemDisplayForm,
         onDismissError,
         getFilterOptions,

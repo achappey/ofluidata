@@ -13,28 +13,40 @@ export type OFluiContaxtMenuColumn = {
     element: any
 }
 
-export default (properties: Property[],
+export default (viewProperties: Property[],
     query: Query,
     items: any[],
     onQueryChange: (query: Query) => void,
     itemTitleColumn?: string,
+    allProperties?: Property[],
     onNextPage?: () => void,
     getFilterOptions?: (property: Property) => Promise<any[]>,
     onItemClick?: (item: any) => void) => {
 
     const [filterPanelProperty, setFilterPanelProperty] = useState<Property | undefined>(undefined);
-    const [columns] = useState<IColumn[]>(properties.map(toColumn));
+    const [showColumnPanel, setShowColumnPanel] = useState<boolean>(false);
+    
+    const [columns] = useState<IColumn[]>(viewProperties.map(toColumn));
     const [contextMenuColumn, setContextMenuColumn] = useState<OFluiContaxtMenuColumn | undefined>(undefined);
     const { t } = useTranslation();
 
     const onColumnHeaderDismiss = () => setContextMenuColumn(undefined);
 
-    const onColumnHeaderClick = (ev: React.MouseEvent<HTMLElement | MouseEvent> | undefined, column: IColumn) => {
+    const onColumnHeaderClick = (
+        ev: React.MouseEvent<HTMLElement | MouseEvent> | undefined,
+         column: IColumn) => {
         if (ev != undefined) {
-            setContextMenuColumn({
-                column: column,
-                element: ev.currentTarget
-            })
+
+            if(column.key != "columns") {
+                setContextMenuColumn({
+                    column: column,
+                    element: ev.currentTarget
+                })
+            }
+            else {
+                setShowColumnPanel(true);
+            }
+          
 
         }
     };
@@ -59,7 +71,7 @@ export default (properties: Property[],
     const contextMenuItems: IContextualMenuItem[] = [];
 
     const columnProperty = contextMenuColumn != undefined
-        ? properties
+        ? viewProperties
             .find(e => e.name == contextMenuColumn.column.key)
         : undefined;
 
@@ -123,6 +135,8 @@ export default (properties: Property[],
         }
     }
 
+    const totalColumns = allProperties != undefined ? columns.length + 1 : columns.length;
+
     const contextualItemProps = contextMenuColumn != undefined
         && contextMenuItems.length > 0
         ? {
@@ -135,10 +149,10 @@ export default (properties: Property[],
         }
         : undefined;
 
-    const currentColumns = columns.map(f => {
+    const currentColumns: IColumn[] = columns.map(f => {
         return {
             ...f,
-            maxWidth: window.innerWidth / columns.length,
+            maxWidth: window.innerWidth / totalColumns,
             isFiltered: query.filters != undefined
                 && query.filters.find(l => l.property.name == f.key) != undefined,
             isSorted: query.order != undefined
@@ -147,6 +161,19 @@ export default (properties: Property[],
                 && query.order[f.key] == Order.Descending
         }
     });
+
+    if(allProperties != undefined)
+    {
+        currentColumns.push(
+        {
+            key: "columns",
+            name: ` ${t('chooseColumns')}`,
+            minWidth: 140,
+            maxWidth: window.innerWidth / totalColumns,
+            iconName: "ColumnOptions"
+            
+        });
+    }
 
     const showFilterPanel = filterPanelProperty != undefined;
 
@@ -177,6 +204,13 @@ export default (properties: Property[],
         setFilterPanelProperty(undefined);
     };
 
+const getColumnsPanelConfig = async () => {
+return {
+    options: allProperties!,
+    selected: currentColumns.map(g => g.name)
+};
+}
+
     const getFilterPanelConfig = (property: Property) => {
         return getFilterOptions!(property)
             .then(t => {
@@ -196,6 +230,20 @@ export default (properties: Property[],
             : columns[0].name
         : undefined;
 
+    const dismissColumnPanel = () => setShowColumnPanel(false);
+
+    const applyColumns = (properties: Property[]) => {
+        onQueryChange({
+            ...query,
+           // filters: query.filters != undefined
+          //      ? [...query.filters.filter(e => e.property.name != filterPanelProperty!.name),
+            //    ...newFilters]
+           //     : newFilters
+        })
+
+     //   setFilterPanelProperty(undefined);
+    };
+
     return {
         currentItems,
         currentColumns,
@@ -203,6 +251,10 @@ export default (properties: Property[],
         showFilterPanel,
         filterPanelProperty,
         titleColumn,
+        showColumnPanel,
+        applyColumns,
+        dismissColumnPanel,
+        getColumnsPanelConfig,
         onItemClick,
         getFilterPanelConfig,
         applyFilters,

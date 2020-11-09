@@ -12,15 +12,17 @@ import { Property, Query } from '../../types/OData';
 import { OFluiDisplayField } from '../Fields/DisplayField';
 import { OFluiSpinner } from '../Spinner/Spinner';
 import { OFluiFilterPanel } from '../Panels/FilterPanel/FilterPanel';
+import { OFluiColumnsPanel } from '../Panels/ColumnsPanel/ColumnsPanel';
 
 export type OFluiDetailsListProps = {
     items: any[],
-    properties: Property[],
+    viewProperties: Property[],  
     query: Query,
     entityKey: string,
     onQueryChange: (query: Query) => void,
     getFilterOptions: (property: Property) => Promise<any[]>,
     itemTitleColumn?: string,
+    allProperties?: Property[],
     stickyHeader?: boolean,
     language?: string
     onNextPage?: () => void,
@@ -37,24 +39,30 @@ export const OFluiDetailsList = (props: OFluiDetailsListProps) => {
         currentItems,
         filterPanelProperty,
         titleColumn,
+        showColumnPanel,
+        getColumnsPanelConfig,
+        applyColumns,
+        dismissColumnPanel,
         onItemClick,
         getFilterPanelConfig,
         applyFilters,
         dismissFilterPanel,
-        onColumnHeaderClick } = useDetailsList(props.properties,
+        onColumnHeaderClick } = useDetailsList(props.viewProperties,
             props.query,
             props.items,
             props.onQueryChange,
             props.itemTitleColumn,
+            props.allProperties,
             props.onNextPage,
             props.getFilterOptions,
             props.onItemClick);
 
     const renderItemColumn = (item: any, _index: number, column: IColumn) => {
         const value = item[column.key];
-        const property = props.properties.find(d => d.name == column.key)!;
+        const property = props.viewProperties.find(d => d.name == column.key);
 
-        return titleColumn == undefined
+        return property != undefined ?
+         titleColumn == undefined
             || titleColumn != column.key
             || onItemClick == undefined ?
             <OFluiDisplayField
@@ -65,7 +73,8 @@ export const OFluiDetailsList = (props: OFluiDetailsListProps) => {
             <Link
                 onClick={() => onItemClick(item)}>
                 {value}
-            </Link>;
+            </Link> 
+            : <></>;
     };
 
     const nextPage = () => {
@@ -119,6 +128,11 @@ export const OFluiDetailsList = (props: OFluiDetailsListProps) => {
                 onOpened={getFilterPanelConfig} />
             }
 
+            <OFluiColumnsPanel
+                isOpen={showColumnPanel}             
+                onApply={applyColumns}
+                onDismiss={dismissColumnPanel}
+                onOpened={getColumnsPanelConfig} />
         </>
 
     );

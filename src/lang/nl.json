@@ -15,6 +15,8 @@
   "itemErrors": "{{itemCount}} items mislukt: ",
   "clearFilters": "Filters wissen",
   "apply": "Toepassen",
+  "restore": "Herstellen",
+  "chooseColumns": "Kolommen kiezen",
   "deletingItems": "Items verwijderen...",
   "urlNotValid": "{{fieldLabel}} is geen geldige link",
   "emailNotValid": "{{fieldLabel}} is geen geldig email adres",

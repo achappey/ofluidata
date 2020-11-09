@@ -1,7 +1,7 @@
 {
     "name": "ofluidata",
     "version": "0.0.2",
-    "types": "build/lib/index.d.ts",
+    "types": "build/index.d.ts",
     "main": "build/index.js",
     "scripts": {
         "build": "tsc"
