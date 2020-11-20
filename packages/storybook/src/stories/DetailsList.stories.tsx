@@ -1,7 +1,7 @@
 
 import React from 'react';
 
-import { OFluiDetailsList } from '@ofluidata/core';
+import { OFluiDetailsList } from 'ofluidata-core';
 
 import { mockColumns, mockItems } from '../helpers/mock-data';
 

@@ -16,7 +16,7 @@ import { OFluiCheckbox } from "../../Controls/Checkbox/Checkbox";
 
 import { useDisplayValue } from "../../../hooks/use-DisplayValue";
 import { useFilterPanel } from "./use-FilterPanel";
-import { useLanguage } from "@ofluidata/translations";
+import { useLanguage } from "ofluidata-translations";
 
 export interface OFluiFilterPanelProps extends IPanelProps {
     column: OFluiColumn,

@@ -7,7 +7,7 @@ import { useAsync, useAsyncCallback } from "react-async-hook";
 import { OFluiColumn, OFluiFieldValidation } from "../../../types/oflui";
 import { OFluiPanel } from "../Panel/Panel";
 import { OFluiEditItemForm } from "../../Forms/EditItem/EditItem";
-import { useLanguage } from "@ofluidata/translations";
+import { useLanguage } from "ofluidata-translations";
 import { useFieldValidation } from "../../../hooks/use-FieldValidation";
 
 export interface OFluiEditItemPanelProps extends IPanelProps {

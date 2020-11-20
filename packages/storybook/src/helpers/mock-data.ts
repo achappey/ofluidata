@@ -3,7 +3,7 @@ import faker from "faker"
 import {
   OFluiColumn, OFluiColumnType,
   OFluiItemHeader, OFluiOrder, OFluiView
-} from "@ofluidata/core";
+} from "ofluidata-core";
 import { MockStore } from "./mock-store";
 
 export const mockStore = () => new MockStore();

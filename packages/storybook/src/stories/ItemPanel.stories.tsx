@@ -2,7 +2,7 @@
 import React from 'react';
 import faker from "faker";
 
-import { OFluiPanel } from "@ofluidata/core";
+import { OFluiPanel } from "ofluidata-core";
 import { itemHeader } from '../helpers/mock-data';
 
 const Template = (args: any) => <OFluiPanel

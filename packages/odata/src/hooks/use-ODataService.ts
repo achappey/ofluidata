@@ -1,4 +1,4 @@
-import { OFluiView } from "@ofluidata/core";
+import { OFluiView } from "ofluidata-core";
 import { OFluiHttpClient } from "../types/http"
 import { ODataConfig, PropertyType } from "../types/odata";
 

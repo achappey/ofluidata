@@ -2,8 +2,8 @@ import React, { FunctionComponent, useContext } from "react";
 
 import { Spinner } from "@fluentui/react";
 
-import { useLanguage } from "@ofluidata/translations";
-import { OFluiErrorMessageBar } from "@ofluidata/core";
+import { useLanguage } from "ofluidata-translations";
+import { OFluiErrorMessageBar } from "ofluidata-core";
 
 import HttpContext from "../../../context/HttpContext";
 import ODataContext from "../../../context/ODataContext";

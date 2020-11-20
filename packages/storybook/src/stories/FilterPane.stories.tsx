@@ -1,7 +1,7 @@
 
 import React from 'react';
 
-import { OFluiFilterPane } from "@ofluidata/core";
+import { OFluiFilterPane } from "ofluidata-core";
 
 import { mockColumns } from '../helpers/mock-data';
 

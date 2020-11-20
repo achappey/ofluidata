@@ -5,7 +5,7 @@ import { ContextualMenu, DefaultPalette, IPanelProps, Label, Link, Stack } from 
 import { OFluiCheckbox } from "../../Controls/Checkbox/Checkbox";
 import { OFluiIconButton } from "../../Controls/Buttons/IconButton/IconButton";
 import { OFluiColumn } from "../../../types/oflui";
-import { useLanguage } from "@ofluidata/translations";
+import { useLanguage } from "ofluidata-translations";
 import { useDisplayValue } from "../../../hooks/use-DisplayValue";
 
 

@@ -1,7 +1,7 @@
 
 import React from 'react';
 
-import { OFluiDisplayItemPanel } from "@ofluidata/core";
+import { OFluiDisplayItemPanel } from "ofluidata-core";
 import { itemHeader, mockGroups, mockItem } from '../helpers/mock-data';
 
 const Template = (args: any) => <OFluiDisplayItemPanel

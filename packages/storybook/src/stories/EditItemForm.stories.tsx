@@ -1,7 +1,7 @@
 
 import React from 'react';
 
-import { OFluiEditItemForm } from "@ofluidata/core";
+import { OFluiEditItemForm } from "ofluidata-core";
 import { mockColumns, mockItem } from '../helpers/mock-data';
 
 const Template = (args: any) => <OFluiEditItemForm

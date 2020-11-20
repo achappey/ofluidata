@@ -2,7 +2,7 @@
 import React from 'react';
 import faker from "faker";
 
-import { OFluiErrorMessageBar } from "@ofluidata/core";
+import { OFluiErrorMessageBar } from "ofluidata-core";
 
 const Template = (args: any) => <OFluiErrorMessageBar
   errorMessage={faker.lorem.sentence()}

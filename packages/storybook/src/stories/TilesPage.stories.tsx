@@ -2,7 +2,7 @@
 import React from 'react';
 import faker from "faker"
 
-import { OFluiTilesPage } from '@ofluidata/core';
+import { OFluiTilesPage } from 'ofluidata-core';
 
 import { mockTiles } from '../helpers/mock-data';
 

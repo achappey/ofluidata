@@ -1,4 +1,4 @@
-import { OFluiView } from "@ofluidata/core";
+import { OFluiView } from "ofluidata-core";
 import { toColumn } from "../../common/oflui";
 import { useODataService } from "../../hooks/use-ODataService";
 import { OFluiODataListConfig } from "../../types/config";

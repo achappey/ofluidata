@@ -1,7 +1,7 @@
 
 import React from 'react';
 
-import { OFluiTileItem } from '@ofluidata/core';
+import { OFluiTileItem } from 'ofluidata-core';
 
 import { mockTiles } from '../helpers/mock-data';
 

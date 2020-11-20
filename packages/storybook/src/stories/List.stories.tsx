@@ -2,7 +2,7 @@
 import React from 'react';
 import faker from 'faker';
 
-import { OFluiList } from '@ofluidata/core';
+import { OFluiList } from 'ofluidata-core';
 
 import { mockColumns, mockStore, mockViews } from '../helpers/mock-data';
 

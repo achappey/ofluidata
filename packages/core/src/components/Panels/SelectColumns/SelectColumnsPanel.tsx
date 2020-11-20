@@ -3,7 +3,7 @@ import { DefaultButton, IPanelProps, Panel, PrimaryButton } from "@fluentui/reac
 
 import { OFluiCheckbox } from "../../Controls/Checkbox/Checkbox";
 import { OFluiColumn } from "../../../types/oflui";
-import { useLanguage } from "@ofluidata/translations";
+import { useLanguage } from "ofluidata-translations";
 
 export interface OFluiSelectColumnsPanelProps extends IPanelProps {
     columns: OFluiColumn[],

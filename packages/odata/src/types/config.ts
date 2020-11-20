@@ -1,4 +1,4 @@
-import { OFluiListConfig } from "@ofluidata/core";
+import { OFluiListConfig } from "ofluidata-core";
 
 export interface OFluiODataListConfig extends OFluiListConfig {
   // image?: string,

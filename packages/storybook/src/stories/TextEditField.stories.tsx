@@ -1,7 +1,7 @@
 
 import React from 'react';
 
-import { OFluiColumnType, OFluiTextEditField } from "@ofluidata/core";
+import { OFluiColumnType, OFluiTextEditField } from "ofluidata-core";
 import { mockColumns } from '../helpers/mock-data';
 
 const Template = (args: any) => <OFluiTextEditField

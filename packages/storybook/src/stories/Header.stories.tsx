@@ -3,7 +3,7 @@ import React from 'react';
 import faker from "faker";
 
 import { itemHeader } from '../helpers/mock-data';
-import { OFluiHeader } from '@ofluidata/core';
+import { OFluiHeader } from 'ofluidata-core';
 
 const Template = (args: any) => <OFluiHeader
     lang={"en"}

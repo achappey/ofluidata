@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { ContextualMenuItemType, DirectionalHint, IColumn, IContextualMenuItem } from "@fluentui/react";
 import { OFluiColumn, OFluiOrder } from "../../types/oflui";
-import { useLanguage } from "@ofluidata/translations";
+import { useLanguage } from "ofluidata-translations";
 
 type OFluiContextColumn = {
     column: IColumn,

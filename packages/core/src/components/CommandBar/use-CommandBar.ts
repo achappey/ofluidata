@@ -4,7 +4,7 @@ import dayjs from 'dayjs'
 
 import { ICommandBarItemProps, IIconProps } from '@fluentui/react'
 
-import { useLanguage } from '@ofluidata/translations'
+import { useLanguage } from 'ofluidata-translations'
 import { OFluiButton, OFluiView } from '../../types/oflui'
 import { OFluiCommandBarProps } from './CommandBar'
 

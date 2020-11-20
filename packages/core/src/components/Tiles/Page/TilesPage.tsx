@@ -11,7 +11,7 @@ import { OFluiTilesList } from '../List/TilesList';
 import { OFluiTileContent } from '../Content/TileContent';
 import { OFluiTilesPageConfig } from '../../../types/config';
 import { OFluiTile } from '../../../types/oflui';
-import { useLanguage } from '@ofluidata/translations';
+import { useLanguage } from 'ofluidata-translations';
 
 export interface OFluiTilesPageProps extends OFluiTilesPageConfig {
 }

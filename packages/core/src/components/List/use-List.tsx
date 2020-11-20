@@ -6,7 +6,7 @@ import { useAsync } from "react-async-hook";
 import { OFluiListProps } from "./List";
 import { useListFilter } from "./use-ListFilter";
 import { OFluiColumn, OFluiColumnGroup, OFluiView } from "../../types/oflui";
-import { useLanguage } from "@ofluidata/translations";
+import { useLanguage } from "ofluidata-translations";
 
 export const useList = (props: OFluiListProps) => {
     const defaultView = props.views[0];

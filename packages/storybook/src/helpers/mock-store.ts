@@ -1,4 +1,4 @@
-import { OFluiColumn, OFluiOrder, OFluiView } from "@ofluidata/core";
+import { OFluiColumn, OFluiOrder, OFluiView } from "ofluidata-core";
 import { mockColumns, mockItem, timeOut } from "./mock-data";
 
 

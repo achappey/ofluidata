@@ -2,7 +2,7 @@ import * as React from 'react';
 import { IStackItemStyles, Label, Link, Stack } from '@fluentui/react';
 
 import { OFluiDisplayField } from '../../Fields/DisplayField';
-import { useLanguage } from '@ofluidata/translations';
+import { useLanguage } from 'ofluidata-translations';
 import { OFluiColumnGroup } from '../../../types/oflui';
 
 

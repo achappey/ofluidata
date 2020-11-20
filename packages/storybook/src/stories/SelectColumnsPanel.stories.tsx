@@ -1,7 +1,7 @@
 
 import React from 'react';
 
-import { OFluiSelectColumnsPanel } from "@ofluidata/core";
+import { OFluiSelectColumnsPanel } from "ofluidata-core";
 
 import { mockColumns } from '../helpers/mock-data';
 

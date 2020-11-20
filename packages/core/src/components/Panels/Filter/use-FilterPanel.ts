@@ -3,7 +3,7 @@ import { ITag } from "@fluentui/react";
 import { useAsync } from "react-async-hook";
 
 import { OFluiFilterPanelProps } from "./FilterPanel";
-import { useLanguage } from "@ofluidata/translations";
+import { useLanguage } from "ofluidata-translations";
 
 export const useFilterPanel = (props: OFluiFilterPanelProps) => {
     const { t } = useLanguage(props.lang);

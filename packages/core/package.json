@@ -1,11 +1,11 @@
 {
-    "name": "@ofluidata/core",
+    "name": "ofluidata-core",
     "version": "0.0.1",
+    "private": false,
     "types": "lib/index.d.ts",
     "main": "lib/index.js",
     "scripts": {
-        "build": "tsc",
-        "eslint": "eslint --init"
+        "build": "tsc"
     },
     "files": [
         "lib"
@@ -16,6 +16,7 @@
         "@types/react-dom": "^16.9.9",
         "@typescript-eslint/eslint-plugin": "^4.8.1",
         "@typescript-eslint/parser": "^4.8.1",
+        "core-js": "3.6.5",
         "eslint": "^7.13.0",
         "eslint-config-standard": "^16.0.2",
         "eslint-plugin-import": "^2.22.1",
@@ -32,9 +33,9 @@
         "react-dom": "^16.8.0"
     },
     "dependencies": {
-        "@ofluidata/translations": "file:../translations",
         "@uifabric/experiments": "^7.36.13",
         "dayjs": "^1.9.6",
+        "ofluidata-translations": "file:../translations",
         "react-async-hook": "^3.6.2",
         "use-debounce": "^5.1.0"
     }

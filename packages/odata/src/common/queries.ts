@@ -1,4 +1,4 @@
-import { OFluiView } from "@ofluidata/core";
+import { OFluiView } from "ofluidata-core";
 import { Property } from "../types/odata";
 /*
 export const toUrlQuery = (view: OFluiView, properties: Property[], version: string) => {

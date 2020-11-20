@@ -1,4 +1,4 @@
-import { OFluiColumn, OFluiColumnType } from "@ofluidata/core";
+import { OFluiColumn, OFluiColumnType } from "ofluidata-core";
 import { Property, PropertyType } from "../types/odata";
 
 export const toColumn = (property: Property): OFluiColumn => {
