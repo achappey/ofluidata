@@ -1,5 +1,4 @@
 import React from "react";
-import { FunctionComponent } from "react";
 
 import { IPanelProps, Spinner } from "@fluentui/react";
 import { useAsync } from "react-async-hook";
@@ -16,7 +15,7 @@ export interface OFluiDisplayItemPanelProps extends IPanelProps {
     onEdit?: (group: OFluiColumnGroup) => void,
 }
 
-export const OFluiDisplayItemPanel: FunctionComponent<OFluiDisplayItemPanelProps> = (props) => {
+export const OFluiDisplayItemPanel: React.FunctionComponent<OFluiDisplayItemPanelProps> = (props) => {
     const getItem = props.getItem ?
         (item: any) => props
             .getItem!(item)

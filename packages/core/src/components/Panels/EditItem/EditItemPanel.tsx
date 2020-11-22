@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { FunctionComponent } from "react";
 
 import { DefaultButton, IPanelProps, PrimaryButton, Spinner } from "@fluentui/react";
 import { useAsync, useAsyncCallback } from "react-async-hook";
@@ -25,7 +24,7 @@ interface Validation {
     validation?: OFluiFieldValidation
 }
 
-export const OFluiEditItemPanel: FunctionComponent<OFluiEditItemPanelProps> = (props) => {
+export const OFluiEditItemPanel: React.FunctionComponent<OFluiEditItemPanelProps> = (props) => {
     const { t } = useLanguage(props.lang);
     const [currentItem, setCurrentItem] = useState<any>(props.item);
 
@@ -38,8 +37,7 @@ export const OFluiEditItemPanel: FunctionComponent<OFluiEditItemPanelProps> = (p
         }));
 
     const onValidation = (column: OFluiColumn, validation?: OFluiFieldValidation) => {
-        console.log(column);
-        console.log(validation);
+       
         setValidations([
             ...validations.filter(a => a.column.name != column.name),
             {

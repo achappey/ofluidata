@@ -1,4 +1,5 @@
 import { OFluiView } from "ofluidata-core";
+import { toUrlQuery } from "../common/queries";
 import { OFluiHttpClient } from "../types/http"
 import { ODataConfig, PropertyType } from "../types/odata";
 
@@ -11,7 +12,7 @@ export const useODataService = ((config: ODataConfig, httpClient: OFluiHttpClien
 
   const getData = (_entityType: string, view: OFluiView) =>
     httpClient
-      .get(`${config.url}/${view.entitySet}`)
+      .get(`${config.url}/${view.entitySet}?${toUrlQuery(view, config.version)}`)
       .then(g => { console.log(g); return g.value; });
   /* const getData2 = (entityType: string, view: OFluiView) =>
      httpClient

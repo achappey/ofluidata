@@ -1,7 +1,7 @@
 
 import React from 'react';
 
-import { OFluiODataTiles } from '@ofluidata/odata';
+import { OFluiODataTiles } from 'ofluidata';
 
 const url = "https://services.odata.org/V3/(S(readwrite))/OData/OData.svc";
 

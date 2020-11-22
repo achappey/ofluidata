@@ -9,7 +9,7 @@ export const OFluiODataTiles = (props: OFluiODataTilesProps) => {
     console.log(props);
     return (
         <>
-            dsadsa
+            dsadsa111
         </>
     );
 };

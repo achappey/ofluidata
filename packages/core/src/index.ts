@@ -3,6 +3,7 @@ export * from './components/Fields/EditField'
 
 export * from './components/Fields/Text/TextEditField'
 export * from './components/Fields/Number/NumberEditField'
+export * from './components/Fields/Metadata/MetadataEditField'
 
 export * from './components/MessageBar/Error/ErrorMessageBar'
 

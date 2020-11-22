@@ -1,7 +1,7 @@
 
 import React from 'react';
 
-import { OFluiODataList, OFluiODataTiles } from "@ofluidata/odata";
+import { OFluiODataList, OFluiODataTiles } from "ofluidata";
 import { defaultConfig } from '../helpers/mock-odata';
 
 const url = "https://services.odata.org/V4/(S(2epkvxlhhkis1eb2hsy3isfe))/TripPinServiceRW";

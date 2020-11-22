@@ -16,7 +16,7 @@ export const OFluiODataListCore = (props: OFluiODataListCoreProps) => {
   //const http = useContext(HttpContext);
   const http = useContext(HttpContext);
   const odataConfig = useContext(ODataContext);
-
+console.log(odataConfig);
   const { views,
     columns,
     getView,

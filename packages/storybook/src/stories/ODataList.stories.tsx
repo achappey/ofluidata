@@ -1,7 +1,7 @@
 
 import React from 'react';
 
-import { OFluiODataList } from '@ofluidata/odata';
+import { OFluiODataList } from 'ofluidata';
 import { defaultConfig, nlConfig } from '../helpers/mock-odata';
 
 const url = "https://services.odata.org/V3/(S(readwrite))/OData/OData.svc";

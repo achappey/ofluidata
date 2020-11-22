@@ -10,6 +10,7 @@ import {
 import { useDetailsList } from './use-DetailsList'
 import { OFluiDisplayField } from '../Fields/DisplayField'
 import { OFluiColumn, OFluiOrder } from '../../types/oflui'
+import { useDisplayValue } from '../../hooks/use-DisplayValue'
 
 export interface OFluiDetailsListProps extends IDetailsListProps {
     properties: OFluiColumn[],
@@ -41,7 +42,7 @@ export const OFluiDetailsList = (props: OFluiDetailsListProps) => {
         const itemClick = props.onItemClick
             ? () => props.onItemClick!(item)
             : undefined
-
+      
         return property != undefined
             ? titleColumn == undefined || titleColumn != column.key || itemClick == undefined
                 ? <OFluiDisplayField
@@ -49,7 +50,7 @@ export const OFluiDetailsList = (props: OFluiDetailsListProps) => {
                     property={property}
                 />
                 : <Link onClick={itemClick}>
-                    {value}
+                    {useDisplayValue(property, value)}
                 </Link>
             : <></>
     }

@@ -30,7 +30,7 @@ export const OFluiList = (props: OFluiListProps) => {
         displayItem,
         selectColumns,
         displayFormGroups,
-        //  newItem,
+        newItem,
         editGroup,
         selectedFilters,
         commandBarItems,
@@ -38,8 +38,8 @@ export const OFluiList = (props: OFluiListProps) => {
         getOptions,
         openFilterPanel,
         onDismissDisplayForm,
-        //     createItem,
-        //  onDismissNewForm,
+        createItem,
+        onDismissNewForm,
         onFiltersChanged,
         onItemClick,
         dismissFilterPane,
@@ -67,8 +67,8 @@ export const OFluiList = (props: OFluiListProps) => {
 
     const contentStyle = { root: { width: showFilterPane ? "75%" : "100%" } };
     const rootStyle = { root: { paddingLeft: 24, paddingRight: 14 } };
-    const paneStyle = { root: { width: "100%" } };
-    // filterButton={filterToggle}
+    const paneStyle = { root: { width: "100%" } };  
+    
     return <>
         {loadPage.error &&
             <OFluiErrorMessageBar errorMessage={loadPage.error.message} />
@@ -109,7 +109,7 @@ export const OFluiList = (props: OFluiListProps) => {
                         columns={currentView.query.fields}
                         onShowAll={openFilterPanel}
                         onDismiss={dismissFilterPane}
-                        onFilterChange={onFiltersChanged}
+                        onFilterChange={onFiltersChanged}                    
                     />
                 </Stack.Item>
             }
@@ -154,6 +154,17 @@ export const OFluiList = (props: OFluiListProps) => {
                 getItem={props.getItem}
                 onSave={onUpdate}
                 onDismiss={onDismissEditForm} />
+        }
+
+        {newItem  &&
+            <OFluiEditItemPanel
+                isOpen={true}
+                headerText={props.itemName}
+                item={newItem}
+                columns={props.columns}
+                getItem={props.newItem}
+                onSave={createItem}
+                onDismiss={onDismissNewForm} />
         }
     </>;
 }
