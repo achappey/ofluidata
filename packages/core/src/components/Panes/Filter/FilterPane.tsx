@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import * as React from "react";
 
 import { ContextualMenu, DefaultPalette, IPanelProps, Label, Link, Stack } from "@fluentui/react";
 
@@ -6,8 +6,7 @@ import { OFluiCheckbox } from "../../Controls/Checkbox/Checkbox";
 import { OFluiIconButton } from "../../Controls/Buttons/IconButton/IconButton";
 import { OFluiColumn } from "../../../types/oflui";
 import { useLanguage } from "ofluidata-translations";
-import { useDisplayValue } from "../../../hooks/use-DisplayValue";
-
+import { toDisplayValue } from "../../../utilities/oflui";
 
 export interface OFluiFilterPaneProps extends IPanelProps {
     columns: OFluiColumn[],
@@ -25,13 +24,13 @@ interface FilterValues {
 export const OFluiFilterPane = (props: OFluiFilterPaneProps) => {
     const { t } = useLanguage(props.lang);
 
-    const [filterValues, setFilterValues] = useState<FilterValues[]>([]);
+    const [filterValues, setFilterValues] = React.useState<FilterValues[]>([]);
 
-    useEffect(() => {
+    React.useEffect(() => {
         setFilterValues(toDefaultFilters(props.columns, props.filters, props.items))
     }, [props.isOpen]);
 
-    useEffect(() => {
+    React.useEffect(() => {
 
     }, [props.filters]);
 
@@ -157,8 +156,8 @@ export interface OFluiFilterPaneColumnProps {
 
 const OFluiFilterPaneColumn = (props: OFluiFilterPaneColumnProps) => {
     const { t } = useLanguage(props.lang);
-    const [showContextMenu, setShowContextMenu] = useState<boolean>(false);
-    const contextMenuRef = useRef(null);
+    const [showContextMenu, setShowContextMenu] = React.useState<boolean>(false);
+    const contextMenuRef = React.useRef(null);
 
     const items = [{
         key: 'remove',
@@ -174,7 +173,7 @@ const OFluiFilterPaneColumn = (props: OFluiFilterPaneColumnProps) => {
         const onClick = (_ev: any, checked: any) => props
             .onToggle(g.filter, checked);
 
-        const displayValue = useDisplayValue(props.column, g.filter);
+        const displayValue = toDisplayValue(props.column, g.filter);
 
         return <OFluiCheckbox
             onChange={onClick}

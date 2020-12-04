@@ -1,4 +1,5 @@
-import React from 'react'
+import * as React from 'react'
+
 import { OFluiODataListConfig } from '../../types/config';
 import { OFluiHttpClient } from '../../types/http';
 import { OFluiHttpProvider } from '../Providers/Http/HttpProvider';

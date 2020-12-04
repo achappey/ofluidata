@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import { IMessageBarProps, MessageBar, MessageBarType } from '@fluentui/react'
 
 export interface OFluiErrorMessageBarProps extends IMessageBarProps {

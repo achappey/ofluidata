@@ -1,7 +1,13 @@
-import { OFluiListConfig } from "ofluidata-core";
+import { OFluiView } from "ofluidata-core";
 
-export interface OFluiODataListConfig extends OFluiListConfig {
-  // image?: string,
-  // views?: OFluiView[]
+export interface OFluiODataListConfig {
+  views?: OFluiView[]
+  image?: string
+  lang?: string
+}
 
+export interface OFluiODataTilesConfig {
+  title?: string
+  lang?: string
+  lists?: { [id: string]: OFluiODataListConfig; };
 }

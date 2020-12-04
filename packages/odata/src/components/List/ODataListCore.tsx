@@ -1,7 +1,8 @@
-import { OFluiList } from 'ofluidata-core';
-import React, { useContext } from 'react'
-import HttpContext from '../../context/HttpContext';
+import * as React from 'react'
 
+import { OFluiList } from 'ofluidata-core';
+
+import HttpContext from '../../context/HttpContext';
 import ODataContext from '../../context/ODataContext';
 
 import { OFluiODataListConfig } from '../../types/config';
@@ -13,13 +14,21 @@ export interface OFluiODataListCoreProps {
 }
 
 export const OFluiODataListCore = (props: OFluiODataListCoreProps) => {
-  //const http = useContext(HttpContext);
-  const http = useContext(HttpContext);
-  const odataConfig = useContext(ODataContext);
-console.log(odataConfig);
+  const http = React.useContext(HttpContext);
+  const odataConfig = React.useContext(ODataContext);
+
   const { views,
     columns,
+    itemName,
+    setKey,
+    actions,
     getView,
+    onAction,
+    getNextPage,
+    onLookupSearch,
+    createItem,
+    deleteItem,
+    readItem,
     onSearch } = useODataList(
       odataConfig!,
       http,
@@ -29,8 +38,17 @@ console.log(odataConfig);
   return (
     <OFluiList
       views={views}
+      setKey={setKey}
+      itemName={itemName}
       columns={columns}
+      actions={actions}
+      onAction={onAction}
       getView={getView}
+      onLookupSearch={onLookupSearch}
+      getNextPage={getNextPage}
+      createItem={createItem}
+      deleteItem={deleteItem}
+      readItem={readItem}
       onSearch={onSearch}
     />
   );

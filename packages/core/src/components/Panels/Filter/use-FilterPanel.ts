@@ -1,6 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ITag } from "@fluentui/react";
-import { useAsync } from "react-async-hook";
 
 import { OFluiFilterPanelProps } from "./FilterPanel";
 import { useLanguage } from "ofluidata-translations";
@@ -9,13 +8,15 @@ export const useFilterPanel = (props: OFluiFilterPanelProps) => {
     const { t } = useLanguage(props.lang);
 
     const [selected, setSelected] = useState<any[]>(props.selected);
+    const [options, setOptions] = useState<any[] | undefined>(undefined);
+    const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
 
-    const getData = () => props
-        .getOptions();
+    useEffect(() => {
+        props.getOptions()
+            .then(setOptions)
+            .catch(error => setErrorMessage(error.toString()))
 
-    const getOptions = useAsync(getData, [props.column]);
-
-    const options = getOptions.result ? getOptions.result : undefined;
+    }, [props.column]);
 
     const addSelected = (t: any) => setSelected([...selected, t]);
     const removeSelected = (t: any) => setSelected(selected.filter(e => e != t));
@@ -68,8 +69,8 @@ export const useFilterPanel = (props: OFluiFilterPanelProps) => {
     return {
         title,
         options,
+        errorMessage,
         selected,
-        getOptions,
         onGetSuggestions,
         onFilterSelected,
         addSelected,

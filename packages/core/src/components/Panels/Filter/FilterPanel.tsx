@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 
 import {
     DefaultButton,
@@ -14,9 +14,9 @@ import { OFluiColumn } from "../../../types/oflui";
 import { OFluiErrorMessageBar } from "../../MessageBar/Error/ErrorMessageBar";
 import { OFluiCheckbox } from "../../Controls/Checkbox/Checkbox";
 
-import { useDisplayValue } from "../../../hooks/use-DisplayValue";
 import { useFilterPanel } from "./use-FilterPanel";
 import { useLanguage } from "ofluidata-translations";
+import { toDisplayValue } from "../../../utilities/oflui";
 
 export interface OFluiFilterPanelProps extends IPanelProps {
     column: OFluiColumn,
@@ -29,7 +29,7 @@ export const OFluiFilterPanel = (props: OFluiFilterPanelProps) => {
     const { title,
         options,
         selected,
-        getOptions,
+        errorMessage,
         onFilterSelected,
         onGetSuggestions,
         addSelected,
@@ -46,7 +46,7 @@ export const OFluiFilterPanel = (props: OFluiFilterPanelProps) => {
             ? addSelected(z)
             : removeSelected(z);
 
-        const displayValue = useDisplayValue(props.column, z);
+        const displayValue = toDisplayValue(props.column, z);
 
         return <OFluiCheckbox key={z}
             label={displayValue}
@@ -77,11 +77,11 @@ export const OFluiFilterPanel = (props: OFluiFilterPanelProps) => {
             headerText={title}
             onRenderFooterContent={renderFooter}>
 
-            {getOptions.error && <OFluiErrorMessageBar errorMessage={getOptions.error.message} />}
+            {errorMessage !== undefined && <OFluiErrorMessageBar errorMessage={errorMessage} />}
 
-            {getOptions.loading && <Spinner />}
+            {options === undefined && <Spinner />}
 
-            {getOptions.result &&
+            {options !== undefined &&
                 <>
                     <TagPicker
                         resolveDelay={500}

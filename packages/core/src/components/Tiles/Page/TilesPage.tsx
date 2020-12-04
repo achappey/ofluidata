@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import * as React from 'react';
 
 import {
     Breadcrumb, DefaultPalette,
@@ -18,7 +18,7 @@ export interface OFluiTilesPageProps extends OFluiTilesPageConfig {
 
 export const OFluiTilesPage = (props: OFluiTilesPageProps) => {
     const { i18n } = useLanguage(props.lang);
-    const [currentTiles, setCurrentTiles] = useState<OFluiTile[] | undefined>(undefined);
+    const [currentTiles, setCurrentTiles] = React.useState<OFluiTile[] | undefined>(undefined);
 
     const navigateHome = () => setCurrentTiles(undefined);
 

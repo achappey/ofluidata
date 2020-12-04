@@ -1,5 +1,5 @@
 
-import React from 'react';
+import * as React from 'react';
 
 import { OFluiODataList, OFluiODataTiles } from "ofluidata";
 import { defaultConfig } from '../helpers/mock-odata';

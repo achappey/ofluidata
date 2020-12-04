@@ -53,9 +53,6 @@ export class HttpService implements OFluiHttpClient {
   }
 
   private handleError = (error: any) => {
-    console.log(error);
-    console.log(error.response);
-    console.log(error.toString());
     throw error.response?.data ?
       new Error(error.response.data.error.message)
       : error;

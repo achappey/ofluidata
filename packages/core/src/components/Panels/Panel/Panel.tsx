@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { FunctionComponent } from "react";
 
 import {
@@ -8,11 +8,13 @@ import {
 } from "@fluentui/react";
 
 import { OFluiErrorMessageBar } from "../../MessageBar/Error/ErrorMessageBar";
-import { OFluiItemHeader } from "../../../types/oflui";
+import { OFluiButton, OFluiItemHeader } from "../../../types/oflui";
 import { OFluiHeader } from "../../Header/Header";
+import { OFluiButtonRow } from "../../Controls/Buttons/ButtonRow/ButtonRow";
 
 export interface OFluiPanelProps extends IPanelProps {
     header?: OFluiItemHeader,
+    buttons?: OFluiButton[],
     errorMessage?: string,
 }
 
@@ -21,16 +23,10 @@ export const OFluiPanel: FunctionComponent<OFluiPanelProps> = (props) => {
 
     const onRenderNavigation = () => <OFluiHeader
         header={props.header!}
+        buttons={props.buttons}
         errorMessage={props.errorMessage}
         onClose={props.onDismiss}
     />
-
-    const panelContent = <>
-        <OFluiErrorMessageBar
-            errorMessage={props.errorMessage} />
-
-        {props.children}
-    </>;
 
     return (
         <>
@@ -41,12 +37,19 @@ export const OFluiPanel: FunctionComponent<OFluiPanelProps> = (props) => {
                         onRenderHeader={onRenderHeader}
                         onRenderNavigation={onRenderNavigation}>
 
-                        {panelContent}
+                        {props.children}
                     </Panel> :
                     <Panel {...props}
                         type={props.type ? props.type : PanelType.medium}>
 
-                        {panelContent}
+                        <OFluiErrorMessageBar
+                            errorMessage={props.errorMessage} />
+
+                        {props.buttons != undefined &&
+                            <OFluiButtonRow buttons={props.buttons} />
+                        }
+
+                        {props.children}
                     </Panel>
             }
         </>

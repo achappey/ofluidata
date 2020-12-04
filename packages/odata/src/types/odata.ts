@@ -7,6 +7,23 @@ export type ODataConfig = {
   endpoints: Endpoint[]
 }
 
+export interface Parameter {
+  name: string;
+  type: string;
+}
+
+export interface Action {
+  name: string;
+  parameters?: Parameter[]
+  returnType?: string;
+}
+
+export interface Function {
+  name: string;
+  parameters?: Parameter[]
+  returnType?: string;
+}
+
 export interface Endpoint {
   name: string;
   url: string;
@@ -14,6 +31,10 @@ export interface Endpoint {
 }
 
 export interface EntitySet {
+  name: string;
+}
+
+export interface Singleton {
   name: string;
 }
 
@@ -38,6 +59,9 @@ export interface EntityType {
   typeName: string;
   properties: Property[],
   entitySets: EntitySet[],
+  singletons: Singleton[],
+  actions: Action[],
+  functions: Function[],
   baseType?: string;
   key?: string;
 }
@@ -58,7 +82,8 @@ export interface Property {
   typeName?: string;
   required?: boolean;
   isCollection?: boolean;
-  isNavigation?: boolean;
+  computed?: boolean;
+  options?: any[]
 }
 
 export enum PropertyType {
@@ -67,7 +92,10 @@ export enum PropertyType {
   datetime,
   duration,
   guid,
-  custom
+  complex,
+  enum,
+  navigation,
+  boolean
 }
 
 export enum Order {

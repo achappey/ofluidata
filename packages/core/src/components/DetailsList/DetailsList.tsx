@@ -1,16 +1,15 @@
-import React from 'react'
+import * as React from 'react'
 import {
     ContextualMenu, DetailsList,
     IColumn, IDetailsHeaderProps,
     IDetailsListProps, TooltipHost,
     IRenderFunction, ITooltipHostProps,
-    Link, Sticky, StickyPositionType
+    Sticky, StickyPositionType
 } from '@fluentui/react'
 
 import { useDetailsList } from './use-DetailsList'
 import { OFluiDisplayField } from '../Fields/DisplayField'
 import { OFluiColumn, OFluiOrder } from '../../types/oflui'
-import { useDisplayValue } from '../../hooks/use-DisplayValue'
 
 export interface OFluiDetailsListProps extends IDetailsListProps {
     properties: OFluiColumn[],
@@ -25,6 +24,7 @@ export interface OFluiDetailsListProps extends IDetailsListProps {
     onFilterCleared?: (column: OFluiColumn) => void,
     onFilterOpened?: (column: OFluiColumn) => void,
     onItemClick?: (item: any) => void
+    onLookupItemClick?: (value: any, column: OFluiColumn) => void
 }
 
 export const OFluiDetailsList = (props: OFluiDetailsListProps) => {
@@ -42,17 +42,16 @@ export const OFluiDetailsList = (props: OFluiDetailsListProps) => {
         const itemClick = props.onItemClick
             ? () => props.onItemClick!(item)
             : undefined
-      
-        return property != undefined
-            ? titleColumn == undefined || titleColumn != column.key || itemClick == undefined
-                ? <OFluiDisplayField
-                    value={value}
-                    property={property}
-                />
-                : <Link onClick={itemClick}>
-                    {useDisplayValue(property, value)}
-                </Link>
-            : <></>
+
+        return property != undefined ? <OFluiDisplayField
+            value={value}
+            property={property}
+            onClick={titleColumn == undefined || titleColumn != column.key || itemClick == undefined ?
+                (property.getForm || property.getList) && props.onLookupItemClick ?
+                    (val: any) => props.onLookupItemClick!(val, property) :
+                    undefined :
+                itemClick}
+        /> : <></>;
     }
 
     const renderHeader = (detailsHeaderProps: IDetailsHeaderProps,

@@ -1,7 +1,6 @@
-import React from "react";
+import * as React from "react";
 
 import {
-    ActionButton,
     DefaultPalette,
     IButtonStyles,
     IconButton,
@@ -9,12 +8,14 @@ import {
     IStackItemStyles,
     Stack,
 } from "@fluentui/react";
-import { OFluiItemHeader } from "../../types/oflui";
+import { OFluiButton, OFluiItemHeader } from "../../types/oflui";
 import { OFluiErrorMessageBar } from "../MessageBar/Error/ErrorMessageBar";
+import { OFluiButtonRow } from "../Controls/Buttons/ButtonRow/ButtonRow";
 
 
 export interface OFluiHeaderProps {
     header: OFluiItemHeader,
+    buttons?: OFluiButton[],
     errorMessage?: string,
     onClose?: () => void
 }
@@ -88,24 +89,12 @@ export const OFluiHeader = (props: OFluiHeaderProps) => {
 
             <OFluiErrorMessageBar errorMessage={props.errorMessage} />
 
-            {props.header.buttons != undefined &&
+            {props.buttons != undefined &&
                 <Stack.Item>
-                    <Stack horizontal
-                        horizontalAlign="end">
-                        {props.header.buttons
-                            .map(b =>
-                                <Stack.Item key={b.key}>
-                                    <ActionButton
-                                        iconProps={b.icon ? { iconName: b.icon } : undefined}
-                                        onClick={b.onClick}>
-                                        {b.text}
-                                    </ActionButton>
-                                </Stack.Item>
-                            )
-                        }
-                    </Stack>
+                    <OFluiButtonRow buttons={props.buttons} />
                 </Stack.Item>
             }
+
         </Stack>
     );
 }

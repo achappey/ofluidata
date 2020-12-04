@@ -1,88 +1,7 @@
-import { ComplexType, Endpoint, EntityType, EnumType, Member, ODataConfig, Order, Property, PropertyType } from "../types/odata";
-/*
-
-export const toFilters = (filters?: Filter[]): string => {
-    const groupedFilter = filters != undefined
-        && filters.length > 0
-        ? groupyBy(filters, "property.name") : {};
-
-    const groupedKeys = Object.keys(groupedFilter);
-
-    const filterQuery = filters != undefined
-        && filters.length > 0
-        ? `&$filter=${groupedKeys
-            .map(g => `(${groupedFilter[g]
-                .map((z: any) => `${z.property.name} ${z.operator} ${toUrlValue(z.value, z.property)}`)
-                .join(" or ")})`)
-            .join(" and ")}` : "";
-
-    return filterQuery;
-}*/
-
-export const valueToQueryStringValue = (property: Property, value: any, version: string) => {
-  switch (property.type) {
-    case PropertyType.datetime:
-      switch (version) {
-        case "4.0":
-          return value;
-        default:
-          return `DateTime'${value}'`;
-      }
-
-    default:
-      return value;
-
-  }
-}
-
-export const toSelectFields = (fields: string[], properties: Property[]): string[] => {
-  return fields
-    .filter(f => !properties.find(a => a.name == f)!.isNavigation);
-}
-
-export const toSelect = (fields: string[]): string => {
-  const select = fields
-    .join(",");
-
-  return `$select=${select}`;
-}
-
-
-export const toExpandFields = (fields: string[], properties: Property[]): string[] => {
-  return fields
-    .filter(f => properties.find(a => a.name == f)!.isNavigation);
-}
-
-
-export const toExpand = (fields: string[]): string => {
-  const expand = fields
-    .join(",");
-
-  return `$expand=${expand}`;
-}
-
-export const toOrder = (order?: { [id: string]: Order; }): string => {
-  const orderKeys = order != undefined ? Object.keys(order) : [];
-  return orderKeys.length > 0
-    ? `$orderby=${orderKeys
-      .map(g => `${g} ${order![g]}`)
-      .join(",")}` : "";
-}
-
-export const toSearchFilter = (property: Property, query: string, dataVersion: string): string => {
-  switch (dataVersion) {
-    case "4.0":
-      return `contains(tolower(${property.name}), '${query}')`;
-    default:
-      return `substringof('${query}', ${property.name})`;
-  }
-}
-
-export const endpointToEntityType = (endpoint: string, config: ODataConfig) => {
-  const types = Object.keys(config.entityTypes);
-
-  return types.find(d => config.entityTypes[d].entitySets.find(z => z.name == endpoint))
-}
+import {
+  ComplexType, Endpoint, EntityType, EnumType,
+  Member, Parameter, Property, PropertyType
+} from "../types/odata";
 
 export const toODataConfig = (url: string, document: XMLDocument, endpoints: Endpoint[]) => {
   const entityTypes: { [id: string]: EntityType; } = {};
@@ -93,10 +12,7 @@ export const toODataConfig = (url: string, document: XMLDocument, endpoints: End
   const dataServices = document.querySelector("Edmx");
 
   schemas.forEach(g => {
-    const enumElements = Array.from(g.querySelectorAll("EnumType"));
-    const complexElements = Array.from(g.querySelectorAll("ComplexType"));
     const entityElements = Array.from(g.querySelectorAll("EntityType"));
-    const containers = Array.from(g.querySelectorAll("EntityContainer"));
 
     entityElements
       .forEach(t => {
@@ -109,8 +25,11 @@ export const toODataConfig = (url: string, document: XMLDocument, endpoints: End
         {
           typeName: fullName,
           entitySets: [],
+          singletons: [],
           name: t.getAttribute("Name")!,
           properties: getProperties(t),
+          actions: [],
+          functions: [],
           baseType: t.getAttribute("BaseType") != null
             ? t.getAttribute("BaseType")!
             : undefined,
@@ -120,6 +39,8 @@ export const toODataConfig = (url: string, document: XMLDocument, endpoints: End
         };
 
       });
+
+    const complexElements = Array.from(g.querySelectorAll("ComplexType"));
 
     complexElements
       .forEach(t => {
@@ -131,6 +52,8 @@ export const toODataConfig = (url: string, document: XMLDocument, endpoints: End
         };
       });
 
+    const enumElements = Array.from(g.querySelectorAll("EnumType"));
+
     enumElements
       .forEach(t => {
         enumTypes[`${g.getAttribute("Namespace")}.${t.getAttribute("Name")}`] =
@@ -140,17 +63,86 @@ export const toODataConfig = (url: string, document: XMLDocument, endpoints: End
         };
       });
 
+    const enumTypeKeys = Object.keys(enumTypes);
+    const entityTypeKeys = Object.keys(entityTypes);
+
+    enumTypeKeys.forEach(key => {
+      entityTypeKeys.forEach(type => {
+        entityTypes[type].properties = entityTypes[type].properties.map(g => {
+
+          return g.typeName == key ? {
+            ...g,
+            type: PropertyType.enum,
+            options: enumTypes[key].members.map(n => n.name)
+          } : g;
+        })
+      });
+    });
+
+    const containers = Array.from(g.querySelectorAll("EntityContainer"));
+
     containers
       .forEach(t => {
         const sets = Array.from(t.querySelectorAll("EntitySet"));
 
-        sets.forEach(t => {
-          entityTypes[t.getAttribute("EntityType")!].entitySets
+        sets.forEach(z => {
+          entityTypes[z.getAttribute("EntityType")!].entitySets
             .push(
               {
-                name: t.getAttribute("Name")!
+                name: z.getAttribute("Name")!
               });
         });
+
+        const singletons = Array.from(t.querySelectorAll("Singleton"));
+
+        singletons.forEach(z => {
+          entityTypes[z.getAttribute("Type")!].singletons
+            .push(
+              {
+                name: z.getAttribute("Name")!
+              });
+        });
+      });
+
+    const annotations = Array.from(g.querySelectorAll('Annotations'));
+
+    annotations
+      .forEach(t => {
+        const computedAnnotation = t.querySelector("[Term*='Org.OData.Core.V1.Computed']");
+        const target = computedAnnotation?.parentElement?.getAttribute("Target")!.split("/");
+
+        if (target) {
+          const entityTypeName = target[0];
+          const propertyName = target[1];
+          const property = entityTypes[entityTypeName].properties.find(f => f.name == propertyName);
+
+          if (property) {
+            property.computed = JSON.parse(computedAnnotation?.getAttribute("Bool")!);
+
+          }
+        }
+      });
+
+    const actions = Array.from(g.querySelectorAll('Action'));
+
+    actions
+      .forEach(t => {
+        if (t.getAttribute("IsBound")) {
+          const boundProperty = t.firstElementChild!.getAttribute("Type");
+
+          entityTypes[boundProperty!].actions.push(getFunctionAction(t))
+        }
+      });
+
+    const functions = Array.from(g.querySelectorAll('Function'));
+
+    functions
+      .forEach(t => {
+        if (t.getAttribute("IsBound")) {
+          const boundProperty = t.firstElementChild!.getAttribute("Type");
+
+          entityTypes[boundProperty!].functions.push(getFunctionAction(t))
+        }
       });
   });
 
@@ -162,6 +154,25 @@ export const toODataConfig = (url: string, document: XMLDocument, endpoints: End
     enumTypes: enumTypes,
     complexTypes: complexTypes
   };
+}
+
+const getFunctionAction = (element: Element) => {
+  const returnType = element.querySelector("ReturnType");
+  const params = element.querySelectorAll("Parameter");
+  const parameters: Parameter[] = [];
+
+  params.forEach(p => {
+    parameters.push({
+      name: p.getAttribute("Name")!,
+      type: p.getAttribute("Type")!
+    });
+  });
+
+  return {
+    name: element.getAttribute("Name")!,
+    parameters: parameters,
+    returnType: returnType?.getAttribute("Type")!
+  }
 }
 
 
@@ -188,23 +199,24 @@ const getProperties = (element: Element): Property[] => {
       y.getAttribute("Name") !== null
     )
     .map(y => {
-      const propertyType = toPropertyType(y.getAttribute("Type")!);
+      const propertyType = toPropertyType(y.getAttribute("Type")!, y.tagName == "NavigationProperty");
 
       return {
         ...propertyType,
         name: y.getAttribute("Name")!,
         required: y.hasAttribute("Nullable")
-          && y.getAttribute("Nullable") === 'false',
-        isNavigation: y.tagName == "NavigationProperty"
+          && y.getAttribute("Nullable") === 'false'
       };
     });
 }
 
 
-const toPropertyType = (type: string) => {
+export const toPropertyType = (type: string, navigationProperty: boolean) => {
   const parsed = stripCollection(type);
 
-  let propertyType: PropertyType = PropertyType.custom;
+  let propertyType: PropertyType = navigationProperty ?
+    PropertyType.navigation :
+    PropertyType.complex;
 
   switch (parsed) {
     case "Edm.String":
@@ -212,6 +224,9 @@ const toPropertyType = (type: string) => {
       break;
     case "Edm.Guid":
       propertyType = PropertyType.guid;
+      break;
+    case "Edm.Boolean":
+      propertyType = PropertyType.boolean;
       break;
     case "Edm.Double":
     case "Edm.Int64":
@@ -235,7 +250,7 @@ const toPropertyType = (type: string) => {
   }
 }
 
-const isCollection = (type: string) => {
+export const isCollection = (type: string) => {
   return type.startsWith("Collection(");
 }
 

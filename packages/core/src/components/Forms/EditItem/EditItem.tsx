@@ -3,7 +3,7 @@ import { Stack } from '@fluentui/react';
 
 import { useState } from 'react';
 import { OFluiEditField } from '../../Fields/EditField';
-import { OFluiColumn, OFluiFieldValidation } from '../../../types/oflui';
+import { OFluiColumn, OFluiFieldValidation, OFluiLookup } from '../../../types/oflui';
 
 
 export type OFluiEditItemFormProps = {
@@ -11,7 +11,8 @@ export type OFluiEditItemFormProps = {
     columns: OFluiColumn[],
     onUpdated: (item: any) => void,
     onValidation: (column: OFluiColumn, result?: OFluiFieldValidation) => void,
-    lang?: string
+    lang?: string,
+    onSearch?: (column: OFluiColumn, query: string) => Promise<OFluiLookup[]>,
 }
 
 export const OFluiEditItemForm = (props: OFluiEditItemFormProps) => {
@@ -33,6 +34,7 @@ export const OFluiEditItemForm = (props: OFluiEditItemFormProps) => {
 
         const onPropertyChange = (newValue?: any) => onChange(t, newValue);
         const onValidated = (validation: OFluiFieldValidation | undefined) => props.onValidation(t, validation);
+        const onSearch = props.onSearch ? (query: string) => props.onSearch!(t, query) : undefined;
 
         return <Stack.Item key={t.name}>
             <OFluiEditField
@@ -41,6 +43,7 @@ export const OFluiEditItemForm = (props: OFluiEditItemFormProps) => {
                 value={value}
                 onUpdate={onPropertyChange}
                 onValidation={onValidated}
+                onSearch={onSearch}
             />
         </Stack.Item>
     }) : <></>;

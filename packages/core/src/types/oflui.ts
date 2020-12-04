@@ -1,11 +1,20 @@
 /* eslint-disable no-unused-vars */
-import { ICommandBarItemProps } from '@fluentui/react'
-import { OFluiListConfig } from './config';
+import { ICommandBarItemProps, ITag } from '@fluentui/react'
+import { OFluiListProps } from '../components/List/List';
+import { OFluiItemConfig, OFluiItemTilesConfig, OFluiListConfig } from './config';
 
 export interface OFluiView extends ICommandBarItemProps {
   entitySet: string;
   query: OFluiQuery;
 
+}
+
+export interface OFluiLookup extends ITag {
+}
+
+export interface OFluiViewResult {
+  items: any[];
+  nextPage?: any;
 }
 
 export interface OFluiButton {
@@ -26,29 +35,54 @@ export interface OFluiItemHeader {
 
 export interface OFluiColumnGroup {
   name: string;
-  columns: OFluiColumn[];
+  columns: string[];
+}
+
+export interface OFluiAction {
+  name: string;
+  onExecute: (sourceItem: any, parameters?: any) => Promise<any>
+  icon?: string,
+  parameters?: OFluiItemConfig,
+  returnType?: OFluiItemConfig,
+
 }
 
 export interface OFluiColumn {
   name: string
   type: OFluiColumnType,
   required?: boolean,
-  isArray?: boolean
+  computed?: boolean,
+  isArray?: boolean,
+  options?: any[],
+
+  getValue?: (value: any) => string,
+  getForm?: (value: any) => OFluiItemConfig
+  getValues?: (values: any[]) => string,
+  getList?: (values: any[]) => OFluiListConfig,
 }
 
+
 export interface OFluiQuery {
-  fields: OFluiColumn[];
+  fields: string[];
   filters?: { [id: string]: any[]; }
   order?: { [id: string]: OFluiOrder; }
+  pageSize?: number
 }
 
 export interface OFluiTile {
   title: string,
   image?: string,
   onRender?: () => React.ReactElement,
-  listConfig?: OFluiListConfig
+  listConfig?: OFluiListProps
   url?: string,
-  tiles?: OFluiTile[]
+  tiles?: OFluiTile[],
+  itemTiles?: OFluiItemTilesConfig
+}
+
+
+export interface OFluiChildPanel {
+  type: OFluiPanelType,
+  props: any
 }
 
 export enum OFluiOrder {
@@ -61,11 +95,21 @@ export enum OFluiColumnType {
   number,
   datetime,
   multiline,
-  custom
+  metadata,
+  lookup,
+  choice,
+  complex,
+  boolean
 }
 
 export enum OFluiFieldValidation {
   isRequired,
   emailNotValid,
   numberInvalid
+}
+
+export enum OFluiPanelType {
+  display,
+  edit,
+  list
 }

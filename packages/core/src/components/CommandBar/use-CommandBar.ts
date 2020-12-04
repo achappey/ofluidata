@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import dayjs from 'dayjs'
+import * as dayjs from 'dayjs'
 
 import { ICommandBarItemProps, IIconProps } from '@fluentui/react'
 
@@ -119,7 +119,7 @@ export const useCommandBar = (props: OFluiCommandBarProps) => {
       : currentView !== undefined
         ? [{
           key: currentView,
-          iconProps: {
+          iconProps: findView(currentView)?.dynamicDate ? undefined : {
             iconName: 'List'
           },
           text: findView(currentView)?.dynamicDate && offset !== undefined

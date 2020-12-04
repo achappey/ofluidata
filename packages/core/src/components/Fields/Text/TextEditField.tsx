@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import * as React from 'react'
 import { ITextFieldProps, TextField } from '@fluentui/react'
-import { OFluiColumn, OFluiFieldValidation } from '../../../types/oflui'
-import { useFieldValidation } from '../../../hooks/use-FieldValidation'
+import { OFluiColumn, OFluiColumnType, OFluiFieldValidation } from '../../../types/oflui'
+import { toFieldValidation } from '../../../utilities/oflui'
 
 export interface OFluiTextEditFieldProps extends ITextFieldProps {
   column: OFluiColumn,
@@ -10,14 +10,14 @@ export interface OFluiTextEditFieldProps extends ITextFieldProps {
 }
 
 export const OFluiTextEditField = (props: OFluiTextEditFieldProps) => {
-  const [value, setValue] = useState(props.value)
-  const [blurred, setBlurred] = useState(false)
-  const isValid = useFieldValidation(props.column, value)
+  const [value, setValue] = React.useState(props.value)
+  const [blurred, setBlurred] = React.useState(false)
+  const isValid = toFieldValidation(props.column, value)
 
   const onChange = (_ev: any, newValue?: string | undefined) => {
     setValue(newValue)
 
-    const validation = useFieldValidation(props.column, newValue)
+    const validation = toFieldValidation(props.column, newValue)
 
     props.onValidation(validation)
 
@@ -37,6 +37,7 @@ export const OFluiTextEditField = (props: OFluiTextEditFieldProps) => {
         autoFocus={props.autoFocus}
         label={props.column.name}
         required={props.column.required}
+        multiline={props.column.type == OFluiColumnType.multiline}
         onBlur={() => setBlurred(true)}
         onChange={onChange}
       />

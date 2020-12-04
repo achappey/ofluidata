@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { Spinner, Stack } from "@fluentui/react";
 
 import { useList } from "./use-List";
@@ -6,34 +6,51 @@ import { useList } from "./use-List";
 import { OFluiCommandBar } from "../CommandBar/CommandBar";
 import { OFluiDetailsList } from "../DetailsList/DetailsList";
 import { OFluiErrorMessageBar } from "../MessageBar/Error/ErrorMessageBar";
-import { OFluiListConfig } from "../../types/config";
+import { OFluiItemConfig, OFluiListConfig } from "../../types/config";
 import { OFluiFilterPanel } from "../Panels/Filter/FilterPanel";
 import { OFluiDisplayItemPanel } from "../Panels/DisplayItem/DisplayItemPanel";
 import { OFluiSelectColumnsPanel } from "../Panels/SelectColumns/SelectColumnsPanel";
 import { OFluiEditItemPanel } from "../Panels/EditItem/EditItemPanel";
 import { OFluiFilterPane } from "../Panes/Filter/FilterPane";
+import { OFluiPanelContainer } from "../Panels/Container/Container";
+import { OFluiListPanel } from "../Panels/List/ListPanel";
+import { OFluiProgressIndicator } from "../ProgressIndicator/ProgressIndicator";
+import { OFluiActionPanel } from "../Panels/Action/ActionPanel";
 
-export interface OFluiListProps extends OFluiListConfig {
+export interface OFluiListProps extends OFluiListConfig, OFluiItemConfig {
 
 }
 
 export const OFluiList = (props: OFluiListProps) => {
     const {
-        items,
-        currentView,
+        listItems,
         order,
         filters,
         filterToggle,
         filterPanelProperty,
-        loadPage,
         showFilterPane,
         displayItem,
+        errorMessage,
         selectColumns,
-        displayFormGroups,
+        editGroupColumns,
         newItem,
         editGroup,
+        childPanels,
         selectedFilters,
         commandBarItems,
+        viewProperties,
+        selection,
+        nextPageLoading,
+        lookupItem,
+        lookupItemForm,
+        lookupItemList,
+        deleteItems,
+        deleteItemsText,
+        currentAction,
+        actionItems,
+        itemAction,
+        deleteAction,
+        deleteCompleted,
         onSearch,
         getOptions,
         openFilterPanel,
@@ -45,33 +62,38 @@ export const OFluiList = (props: OFluiListProps) => {
         dismissFilterPane,
         onOffsetChanged,
         onFilterCleared,
+        actionsCompleted,
+        onDeleteItem,
         onEdit,
+        onDismissLookupForm,
+        onLookupItemClick,
         onDismissEditForm,
         onDismissSelectColumns,
         onUpdate,
+        onDismissAction,
         onSelectColumns,
         onApplySelectColumns,
         dismissFilterPanel,
+        getNextPage,
         applyFilters,
         onViewChange,
         onOrderChanged
     } = useList(props);
 
     const onRenderMissingItem = () => {
-        return <>
-            {!loadPage.error
-                && <Spinner />
-            }
-        </>
+        if (getNextPage !== undefined && !nextPageLoading)
+            getNextPage();
+
+        return <Spinner />;
     }
 
     const contentStyle = { root: { width: showFilterPane ? "75%" : "100%" } };
     const rootStyle = { root: { paddingLeft: 24, paddingRight: 14 } };
-    const paneStyle = { root: { width: "100%" } };  
-    
+    const paneStyle = { root: { width: "100%" } };
+
     return <>
-        {loadPage.error &&
-            <OFluiErrorMessageBar errorMessage={loadPage.error.message} />
+        {errorMessage &&
+            <OFluiErrorMessageBar errorMessage={errorMessage} />
         }
 
         <OFluiCommandBar {...props}
@@ -86,18 +108,40 @@ export const OFluiList = (props: OFluiListProps) => {
 
         <Stack horizontal styles={rootStyle}>
             <Stack.Item styles={contentStyle}>
-                <OFluiDetailsList
-                    items={items}
-                    order={order}
-                    filters={filters}
-                    properties={currentView.query.fields}
-                    onItemClick={onItemClick}
-                    onSelectColumns={onSelectColumns}
-                    onRenderMissingItem={onRenderMissingItem}
-                    onFilterOpened={openFilterPanel}
-                    onFilterCleared={onFilterCleared}
-                    onOrderChanged={onOrderChanged}
-                />
+                {deleteItems && deleteAction &&
+                    <OFluiProgressIndicator
+                        label={deleteItemsText}
+                        items={deleteItems}
+                        onCompleted={deleteCompleted}
+                        itemAction={deleteAction} />
+                }
+
+                {actionItems && itemAction &&
+                    <OFluiProgressIndicator
+                        label={currentAction?.name}
+                        items={actionItems}
+                        onCompleted={actionsCompleted}
+                        itemAction={itemAction} />
+                }
+
+                {!itemAction && !deleteItems && listItems &&
+                    <OFluiDetailsList
+                        items={listItems}
+                        order={order}
+                        filters={filters}
+                        selection={selection}
+                        properties={viewProperties}
+                        setKey={props.setKey}
+                        compact={props.compact}
+                        onItemClick={onItemClick}
+                        onLookupItemClick={onLookupItemClick}
+                        onSelectColumns={onSelectColumns}
+                        onRenderMissingItem={onRenderMissingItem}
+                        onFilterOpened={openFilterPanel}
+                        onFilterCleared={onFilterCleared}
+                        onOrderChanged={onOrderChanged}
+                    />
+                }
             </Stack.Item>
 
             {showFilterPane &&
@@ -105,17 +149,72 @@ export const OFluiList = (props: OFluiListProps) => {
                     <OFluiFilterPane
                         isOpen={showFilterPane}
                         filters={filters}
-                        items={items}
-                        columns={currentView.query.fields}
+                        items={listItems}
+                        columns={viewProperties}
                         onShowAll={openFilterPanel}
                         onDismiss={dismissFilterPane}
-                        onFilterChange={onFiltersChanged}                    
+                        onFilterChange={onFiltersChanged}
                     />
                 </Stack.Item>
             }
         </Stack>
 
-        {filterPanelProperty && getOptions && applyFilters &&
+        <OFluiPanelContainer panels={childPanels} />
+        {
+            currentAction && currentAction.parameters &&
+            <OFluiActionPanel
+                headerText={currentAction.name}
+                isOpen={true}
+                action={currentAction}
+                sourceItem={actionItems![0]}
+                onDismiss={onDismissAction}
+                onLookupSearch={props.onLookupSearch}
+            />
+        }
+        {
+            lookupItem && lookupItemForm &&
+            <OFluiDisplayItemPanel {...lookupItemForm}
+                isOpen={true}
+                item={lookupItem}
+                onDismiss={onDismissLookupForm}
+            />
+        }
+        {
+            lookupItem && lookupItemList &&
+            <OFluiListPanel {...lookupItemList}
+                isOpen={true}
+                onDismiss={onDismissLookupForm}
+            />
+        }
+        {
+            displayItem && !editGroup &&
+            <OFluiDisplayItemPanel
+                isOpen={true}
+                item={displayItem}
+                columns={props.columns}
+                headerText={props.itemName}
+                groups={props.groups}
+                actions={props.actions}
+                readItem={props.readItem}
+                onEdit={onEdit}
+                deleteItem={onDeleteItem}
+                onDismiss={onDismissDisplayForm} />
+        }
+
+        {
+            editGroup && onUpdate &&
+            <OFluiEditItemPanel
+                isOpen={true}
+                headerText={props.itemName}
+                item={displayItem}
+                columns={editGroupColumns}
+                readItem={props.readItem}
+                onSave={onUpdate}
+                onLookupSearch={props.onLookupSearch}
+                onDismiss={onDismissEditForm} />
+        }
+        {
+            filterPanelProperty && getOptions && applyFilters &&
             <OFluiFilterPanel isOpen={true}
                 column={filterPanelProperty}
                 selected={selectedFilters}
@@ -125,45 +224,28 @@ export const OFluiList = (props: OFluiListProps) => {
             />
         }
 
-        {displayItem && !editGroup &&
-            <OFluiDisplayItemPanel
-                isOpen={true}
-                headerText={props.itemName}
-                item={displayItem}
-                groups={displayFormGroups}
-                getItem={props.getItem}
-                onEdit={onEdit}
-                onDismiss={onDismissDisplayForm} />
-        }
 
-        {selectColumns &&
+        {
+            selectColumns &&
             <OFluiSelectColumnsPanel
                 isOpen={true}
                 columns={props.columns}
-                selected={currentView.query.fields}
+                selected={viewProperties}
                 onApply={onApplySelectColumns}
                 onDismiss={onDismissSelectColumns} />
         }
 
-        {editGroup && onUpdate &&
-            <OFluiEditItemPanel
-                isOpen={true}
-                headerText={props.itemName}
-                item={displayItem}
-                columns={editGroup.columns}
-                getItem={props.getItem}
-                onSave={onUpdate}
-                onDismiss={onDismissEditForm} />
-        }
 
-        {newItem  &&
+        {
+            newItem &&
             <OFluiEditItemPanel
                 isOpen={true}
                 headerText={props.itemName}
                 item={newItem}
                 columns={props.columns}
-                getItem={props.newItem}
+                readItem={props.newItem}
                 onSave={createItem}
+                onLookupSearch={props.onLookupSearch}
                 onDismiss={onDismissNewForm} />
         }
     </>;

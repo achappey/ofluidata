@@ -1,15 +1,15 @@
 import { OFluiColumn, OFluiOrder, OFluiView } from "ofluidata-core";
-import { mockColumns, mockItem, timeOut } from "./mock-data";
+import { mockColumns, mockItem, mockLookup, timeOut } from "./mock-data";
 
 
-const extractFields = (items: any[], fields: OFluiColumn[]) => {
+const extractFields = (items: any[], fields: string[]) => {
   return items.map(y => {
     let result = {
       id: y.id
     };
 
     fields.forEach(a => {
-      result[a.name] = y[a.name];
+      result[a] = y[a];
     });
 
     return result;
@@ -17,18 +17,20 @@ const extractFields = (items: any[], fields: OFluiColumn[]) => {
 }
 
 const search = (items: any[], properties: string[], query: string) => {
-  return items.filter(y => {
-    const validations: boolean[] = [];
+  return {
+    items: items.filter(y => {
+      const validations: boolean[] = [];
 
-    properties.forEach(g => {
-      validations.push(y[g] && y[g].toString()
-        .toLowerCase()
-        .indexOf(query
-          .toLowerCase()) > -1);
-    });
+      properties.forEach(g => {
+        validations.push(y[g] && y[g].toString()
+          .toLowerCase()
+          .indexOf(query
+            .toLowerCase()) > -1);
+      });
 
-    return validations.filter(a => a).length > 0;
-  });
+      return validations.filter(a => a).length > 0;
+    }),
+  };
 
 }
 
@@ -53,7 +55,7 @@ const applyFilter = (items: any[], filters?: any) => {
 
 
 const applyOrder = (items: any[], order?: any) => {
-  console.log(items);
+
   if (order) {
     const filterKeys = Object.keys(order);
 
@@ -77,12 +79,35 @@ const applyOrder = (items: any[], order?: any) => {
 
 export class MockStore {
 
+  lookups: any[] = [];
   items: any[] = [];
+  currentPage = 1;
+  pageSize?: number;
 
-  constructor() {
-    for (let i = 0; i < 200; i++) {
-      this.items.push(mockItem())
+  constructor(pageSize?: number) {
+    for (let i = 0; i < 10; i++) {
+      this.lookups.push(mockLookup())
     }
+
+    for (let i = 0; i < 7; i++) {
+      this.items.push(mockItem(
+        this.lookups[i],
+        this.lookups.slice(0, 2)))
+    }
+
+    this.pageSize = pageSize;
+  }
+
+  lookupSearch = (_column: OFluiColumn, query: string) => {
+    return timeOut()
+      .then(() => this.lookups
+        .filter(a => a.string.indexOf(query) > -1)
+        .map(h => {
+          return {
+            key: h.id,
+            name: h.string
+          }
+        }));
   }
 
   search = (query: string) => {
@@ -93,17 +118,23 @@ export class MockStore {
           .map(g => g.name), query));
   }
 
-  updateItem = (item: any) => {
+  updateItem = async (item: any) => {
+    await timeOut();
+
+    this.items.splice(this.items.findIndex(a => a.id == item.id), 1, item);
+
+    return item;
+  }
+
+  deleteItem = (item: any) => {
     return timeOut()
-      .then(() => {
-        this.items.splice(this.items.findIndex(a => a.id == item.id), item);
-        return item;
-      })
+      .then(() => this.items = this.items.filter(a => a.id != item.id));
   }
 
   createItem = (item: any) => {
     return timeOut()
-      .then(() => this.items.push(item));
+      .then(() => this.items.push(item))
+      .then(() => item);
   }
 
   getItem = (item: any) => {
@@ -111,12 +142,42 @@ export class MockStore {
       .then(() => this.items.find(a => a.id == item.id));
   }
 
-  getView = (view: OFluiView) => {
+  onAction = (action: any, item: any, params: any) => {
+    return timeOut()
+      .then(() => this.items.find(a => a.id == item.id));
+  }
+
+  getPage = (view: OFluiView, page: number) => {
+    this.currentPage = page
+    return this.getItems(view)
+      .then((a) => {
+        return {
+          items: a,
+          nextPage: this.items.length / this.pageSize! > page ? page + 1 : undefined
+        }
+      });
+  }
+
+  private getItems = (view: OFluiView) => {
     return timeOut()
       .then(() => this.items)
       .then((a: any[]) => applyFilter(a, view.query.filters))
       .then((a: any[]) => applyOrder(a, view.query.order))
-      .then((a: any[]) => extractFields(a, view.query.fields));
+      .then((a: any[]) => extractFields(a, view.query.fields))
+      .then((a: any[]) => this.pageSize! > 0 ? a.slice((this.currentPage - 1) * this.pageSize!,
+        this.pageSize! + ((this.currentPage - 1) * this.pageSize!)) : a)
+  }
+
+  getView = (view: OFluiView) => {
+    this.currentPage = 1;
+
+    return this.getItems(view)
+      .then((a: any[]) => {
+        return {
+          items: a,
+          nextPage: this.pageSize && this.pageSize > 0 ? this.currentPage + 1 : undefined
+        }
+      });
   }
 
   getOptions = (column: OFluiColumn) =>

@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { ITilesGridSegment, TilesGridMode, TilesList } from '@uifabric/experiments';
 
 import { OFluiTileItem } from '../Item/TileItem';

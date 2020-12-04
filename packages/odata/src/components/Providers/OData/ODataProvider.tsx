@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useContext } from "react";
+import * as React from "react";
 
 import { Spinner } from "@fluentui/react";
 
@@ -15,8 +15,8 @@ export interface OFluiODataProviderProps {
     title?: string
 }
 
-export const OFluiODataProvider: FunctionComponent<OFluiODataProviderProps> = (props) => {
-    const http = useContext(HttpContext);
+export const OFluiODataProvider: React.FunctionComponent<OFluiODataProviderProps> = (props) => {
+    const http = React.useContext(HttpContext);
     const loadMetadata = useOData(props.url, http);
     const { t } = useLanguage(props.lang);
 

@@ -1,5 +1,5 @@
 
-import React from 'react';
+import * as React from 'react';
 
 import { OFluiColumnType, OFluiTextEditField } from "ofluidata-core";
 import { mockColumns } from '../helpers/mock-data';
@@ -16,6 +16,11 @@ Required.args = {
     ...mockColumns.find(a => a.type === OFluiColumnType.text),
     required: true
   }
+}
+
+export const Value = Template.bind({});
+Value.args = {
+  value: "Your value"
 }
 
 export default {

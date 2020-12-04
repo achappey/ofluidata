@@ -1,5 +1,5 @@
 import { useAsync } from "react-async-hook";
-import { toODataConfig } from "../common/odataParser";
+import { toODataConfig } from "../utilities/odataParser";
 import { OFluiHttpClient } from "../types/http"
 
 const toMetadataUrl = (url: string) => {

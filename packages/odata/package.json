@@ -1,7 +1,6 @@
 {
     "name": "ofluidata",
-    "version": "0.0.21",
-    "private": false,
+    "version": "0.0.25",
     "types": "lib/index.d.ts",
     "main": "lib/index.js",
     "scripts": {
@@ -11,8 +10,8 @@
         "lib"
     ],
     "devDependencies": {
-        "@fluentui/react": "^7.152.0",
-        "@types/react": "^16.9.56",
+        "@fluentui/react": "^7.153.4",
+        "@types/react": "^16.14.2",
         "@types/react-dom": "^16.9.9",
         "core-js": "3.6.5",
         "react": "16.8.5",
@@ -25,9 +24,9 @@
         "react-dom": "^16.8.0"
     },
     "dependencies": {
-        "ofluidata-translations": "file:../translations",
-        "ofluidata-core": "file:../core",
         "axios": "^0.21.0",
+        "ofluidata-core": "0.0.7",
+        "ofluidata-translations": "^0.0.1",
         "react-async-hook": "^3.6.2"
     }
 }

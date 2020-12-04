@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import * as React from "react";
 import { DefaultButton, IPanelProps, Panel, PrimaryButton } from "@fluentui/react";
+import { useLanguage } from "ofluidata-translations";
 
 import { OFluiCheckbox } from "../../Controls/Checkbox/Checkbox";
 import { OFluiColumn } from "../../../types/oflui";
-import { useLanguage } from "ofluidata-translations";
 
 export interface OFluiSelectColumnsPanelProps extends IPanelProps {
     columns: OFluiColumn[],
@@ -14,7 +14,7 @@ export interface OFluiSelectColumnsPanelProps extends IPanelProps {
 export const OFluiSelectColumnsPanel = (props: OFluiSelectColumnsPanelProps) => {
     const { t } = useLanguage(props.lang);
 
-    const [selected, setSelected] = useState<string[]>(props.selected.map(f => f.name));
+    const [selected, setSelected] = React.useState<string[]>(props.selected.map(f => f.name));
 
     const addSelected = (t: OFluiColumn) => setSelected([...selected, t.name]);
     const removeSelected = (t: OFluiColumn) => setSelected(selected.filter(e => e != t.name));

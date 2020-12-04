@@ -1,14 +1,14 @@
-import React, { FunctionComponent } from "react";
+import * as React from "react";
 
 import HttpContext from "../../../context/HttpContext";
-import { HttpService } from "../../../common/httpService";
+import { HttpService } from "../../../utilities/httpService";
 import { OFluiHttpClient } from "../../../types/http";
 
 export interface OFluiHttpProviderProps {
     httpClient?: OFluiHttpClient
 }
 
-export const OFluiHttpProvider: FunctionComponent<OFluiHttpProviderProps> = (props) => {
+export const OFluiHttpProvider: React.FunctionComponent<OFluiHttpProviderProps> = (props) => {
     const httpClient = props.httpClient ?
         props.httpClient :
         new HttpService();

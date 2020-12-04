@@ -3,14 +3,17 @@ import { IStackItemStyles, Label, Link, Stack } from '@fluentui/react';
 
 import { OFluiDisplayField } from '../../Fields/DisplayField';
 import { useLanguage } from 'ofluidata-translations';
-import { OFluiColumnGroup } from '../../../types/oflui';
+import { OFluiColumn, OFluiColumnGroup } from '../../../types/oflui';
 
 
 export type OFluiDisplayItemFormProps = {
     item: any;
-    groups: OFluiColumnGroup[],
+    columns: OFluiColumn[],
+    groups?: OFluiColumnGroup[],
     onEdit?: (group: OFluiColumnGroup) => void,
+    onColumnClick?: (value: any, column: OFluiColumn) => void,
     lang?: string
+
 }
 
 const stackItemLabelStyles: IStackItemStyles = {
@@ -41,12 +44,26 @@ const valueStyles = {
 export const OFluiDisplayItemForm = (props: OFluiDisplayItemFormProps) => {
     const { t } = useLanguage(props.lang);
 
-    const content = props.item != undefined ? props.groups.map(g => {
+
+    const groups = props.groups ?
+        props.groups :
+        [{
+            name: "All",
+            columns: props.columns.map(v => v.name)
+        }];
+
+    const content = props.item != undefined ? groups.map(g => {
         const onEdit = props.onEdit ? () => props.onEdit!(g) : undefined;
+
+        const columns = g.columns.map(f => props.columns.find(a => a.name == f)!);
 
         return <Stack.Item key={g.name}>
             <Stack>
-                {g.columns.map((h, i) => {
+                {columns.map((h, i) => {
+
+                    const onClick = h.getForm && props.onColumnClick ?
+                        (val: any) => props.onColumnClick!(val, h) : undefined;
+
                     return <Stack.Item key={h.name}>
                         <Stack horizontal>
                             <Stack.Item styles={stackItemLabelStyles}>
@@ -59,7 +76,9 @@ export const OFluiDisplayItemForm = (props: OFluiDisplayItemFormProps) => {
 
                                     <OFluiDisplayField
                                         value={props.item[h.name]}
-                                        property={h} />
+                                        property={h}
+                                        onClick={onClick}
+                                    />
 
                                 </div>
                             </Stack.Item>

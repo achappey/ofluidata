@@ -1,12 +1,13 @@
 import faker from "faker"
 
 import {
+  OFluiAction,
   OFluiColumn, OFluiColumnType,
-  OFluiItemHeader, OFluiOrder, OFluiView
+  OFluiItemHeader, OFluiLookup, OFluiOrder, OFluiView
 } from "ofluidata-core";
 import { MockStore } from "./mock-store";
 
-export const mockStore = () => new MockStore();
+export const mockStore = (pageSize?: number) => new MockStore(pageSize);
 
 export const itemHeader: OFluiItemHeader =
 {
@@ -46,12 +47,49 @@ export const mockColumns: OFluiColumn[] = [
     type: OFluiColumnType.datetime
   },
   {
-    name: "custom",
-    type: OFluiColumnType.custom
+    name: "lookup",
+    type: OFluiColumnType.lookup,
+    getValue: (item) => item ? item["string"] : "",
+    getForm: (item) => {
+      return {
+        columns: mockColumns,
+        groups: mockGroups(),
+        item: mockItem(mockLookup(), [mockLookup(), mockLookup()])
+      }
+    }
+  },
+  {
+    name: "lookup_list",
+    isArray: true,
+    type: OFluiColumnType.lookup,
+    //  getValues: (item) => item ? item.length.toString() : "",
+    getList: (item) => {
+      return {
+        columns: mockColumns,
+        views: mockViews,
+        setKey: "id",
+        getView: () => timeOut().then(() => { return { items: mockItems() } })
+      }
+    }
+  },
+  {
+    name: "complex",
+    type: OFluiColumnType.complex
   },
   {
     name: "multiline",
     type: OFluiColumnType.multiline
+  },
+  {
+    name: "boolean",
+    type: OFluiColumnType.boolean
+  },
+  {
+    name: "choice",
+    type: OFluiColumnType.choice,
+    options: [
+      "1", "2", "3"
+    ]
   }
 ]
 
@@ -61,7 +99,7 @@ export const mockViews: OFluiView[] = [
     text: "View 1",
     query: {
       order: { "id": OFluiOrder.ascending },
-      fields: mockColumns.slice(0, 4)
+      fields: mockColumns.map(d => d.name)
     },
     entitySet: "items"
   },
@@ -70,7 +108,7 @@ export const mockViews: OFluiView[] = [
     text: "View 2",
     query: {
       order: { "id": OFluiOrder.ascending },
-      fields: mockColumns.slice(0, 2)
+      fields: mockColumns.slice(0, 2).map(d => d.name)
     },
     entitySet: "items"
   },
@@ -79,7 +117,7 @@ export const mockViews: OFluiView[] = [
     text: "Dynamic view 1",
     query: {
       order: { "id": OFluiOrder.ascending },
-      fields: mockColumns.slice(2, 4)
+      fields: mockColumns.slice(2, 4).map(d => d.name)
     },
     dynamicDate: {
       fields: "datetime",
@@ -89,10 +127,39 @@ export const mockViews: OFluiView[] = [
   }
 ];
 
+export const mockActions: OFluiAction[] = [
+  {
+    name: "Action1",
+    onExecute: (params: any) => timeOut().then(() => {
+      console.log(params);
+      return {
+        ...params,
+        id: params.id * 100,
+        string: "Something happened here " + params.string,
+        datetime: new Date()
+      }
+    }),
+    parameters: {
+      columns: mockColumns.slice(0, 3)
+    },
+    returnType: {
+      columns: mockColumns.slice(0, 3)
+    }
+  },
+  {
+    name: "Action2",
+    onExecute: () => timeOut().then(null)
+  }
+];
+
 export const mockGetView = () => timeOut()
   .then(mockItems)
 
-export const mockGroups = () => [{ name: "Group 1", columns: mockColumns }];
+export const mockGroups = () => [{
+  name: "Group 1",
+  columns: mockColumns
+    .map(f => f.name)
+}];
 
 export const mockOptions = () => timeOut()
   .then(() => mockItems()
@@ -110,16 +177,32 @@ export const mockItems = () => [
   mockItem()
 ]
 
-export const mockItem = () => {
+
+export const mockSearch = (_column: OFluiColumn, query: string): Promise<OFluiLookup[]> => {
+  return timeOut()
+    .then(() => mockItems()
+      .filter(a => a.string.indexOf(query) > -1)
+      .map(i => {
+        return {
+          key: i.id,
+          name: i.string
+        }
+      }));
+}
+
+export const mockItem = (lookup?: any, lookupList?: any) => {
   return {
     id: faker.random.number(),
     string: faker.name.firstName(),
     multiline: faker.lorem.paragraph(),
     datetime: faker.date.past(),
-    custom: {
+    boolean: faker.random.boolean(),
+    lookup: lookup,
+    lookup_list: lookupList,
+    complex: {
       fileName: faker.system.fileName()
     },
-    custom_list: [{
+    complex_list: [{
       fileName: faker.system.fileName()
     }, {
       fileName: faker.system.fileType()
@@ -137,6 +220,17 @@ export const mockItem = () => {
 
   }
 }
+
+export const mockLookup = () => {
+  return {
+    id: faker.random.number(),
+    string: faker.company.companyName(),
+  }
+}
+
+export const mockError = () =>
+  timeOut()
+    .then(() => { throw new Error(faker.lorem.sentence()) });
 
 
 export const mockListConfig = () => {
@@ -157,6 +251,35 @@ export const mockTiles = () => {
     {
       title: "Custom render",
       image: faker.image.nightlife()
+    },
+    {
+      title: "Item tiles",
+      image: faker.image.nightlife(),
+      itemTiles: {
+        itemConfig: {
+          columns: mockColumns
+        },
+        item: mockItem(),
+        tiles: [{
+          title: "Another list",
+          image: faker.image.food(),
+          listConfig: mockListConfig()
+        },
+        {
+          title: "Another more tiles",
+          image: faker.image.cats(),
+          tiles: [{
+            title: "Yet another list",
+            image: faker.image.food(),
+            listConfig: mockListConfig()
+          }]
+        },
+        {
+          title: "Another redirect",
+          image: faker.image.transport(),
+          url: "https://www.1112.net/lastpage.html"
+        }]
+      }
     },
     {
       title: "More tiles",

@@ -1,5 +1,5 @@
 
-import React from 'react';
+import * as React from 'react';
 
 import { OFluiColumnType, OFluiNumberEditField } from "ofluidata-core";
 import { mockColumns } from '../helpers/mock-data';

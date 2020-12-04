@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import * as React from 'react'
 import { ISpinButtonProps, Position, SpinButton } from '@fluentui/react'
 
 import { OFluiColumn, OFluiFieldValidation } from '../../../types/oflui'
 import { useDebounce } from 'use-debounce'
-import { useNumberValue } from '../../../hooks/use-NumberValue'
-import { useFieldValidation } from '../../../hooks/use-FieldValidation'
+import { toFieldValidation, toNumberValue } from '../../../utilities/oflui'
 // import { useDebounce } from 'use-debounce';
 
 // import { isCommaDecimalLocale } from '../../../../mappings/oflui';
@@ -26,18 +25,17 @@ const _toNumberValue = (value?: string) => {
 
 
 export const OFluiNumberEditField = (props: OFluiNumberEditFieldProps) => {
-  const [fieldValue, setFieldValue] = useState(props.value)
-  const [isValid] = useState(true)
+  const [fieldValue, setFieldValue] = React.useState(props.value)
+  const [isValid] = React.useState(true)
   const [value] = useDebounce(fieldValue, 1000);
 
   const onValidate = (value?: string) => {
-    console.log(useFieldValidation(props.column, value)?.toString());
-    useFieldValidation(props.column, value)?.toString()
+    toFieldValidation(props.column, value)?.toString()
   };
 
   const validate = (value?: string) => {
-    const parsedValue = useNumberValue(value);
-    const validation = useFieldValidation(props.column, value);
+    const parsedValue = toNumberValue(value);
+    const validation = toFieldValidation(props.column, value);
 
     props.onValidation(validation);
 
@@ -46,7 +44,7 @@ export const OFluiNumberEditField = (props: OFluiNumberEditFieldProps) => {
     }
   }
 
-  useEffect(() => validate(value), [value]);
+  React.useEffect(() => validate(value), [value]);
 
   const onChange = (_ev: React.FormEvent<HTMLDivElement>) => {
     const newValue = (_ev.target as HTMLInputElement).value

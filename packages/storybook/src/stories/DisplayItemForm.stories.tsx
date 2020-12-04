@@ -1,5 +1,5 @@
 
-import React from 'react';
+import * as React from 'react';
 
 import { OFluiDisplayItemForm } from "ofluidata-core";
 import { mockGroups, mockItem } from '../helpers/mock-data';
