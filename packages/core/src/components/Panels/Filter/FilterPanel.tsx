@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react'
 
 import {
     DefaultButton,
@@ -7,16 +7,16 @@ import {
     PrimaryButton,
     Spinner,
     TagPicker
-} from "@fluentui/react";
+} from '@fluentui/react'
 
-import { OFluiColumn } from "../../../types/oflui";
+import { OFluiColumn } from '../../../types/oflui'
 
-import { OFluiErrorMessageBar } from "../../MessageBar/Error/ErrorMessageBar";
-import { OFluiCheckbox } from "../../Controls/Checkbox/Checkbox";
+import { OFluiErrorMessageBar } from '../../MessageBar/Error/ErrorMessageBar'
+import { OFluiCheckbox } from '../../Controls/Checkbox/Checkbox'
 
-import { useFilterPanel } from "./use-FilterPanel";
-import { useLanguage } from "ofluidata-translations";
-import { toDisplayValue } from "../../../utilities/oflui";
+import { useFilterPanel } from './use-FilterPanel'
+import { useLanguage } from 'ofluidata-translations'
+import { toDisplayValue } from '../../../utilities/oflui'
 
 export interface OFluiFilterPanelProps extends IPanelProps {
     column: OFluiColumn,
@@ -26,7 +26,8 @@ export interface OFluiFilterPanelProps extends IPanelProps {
 }
 
 export const OFluiFilterPanel = (props: OFluiFilterPanelProps) => {
-    const { title,
+    const {
+        title,
         options,
         selected,
         errorMessage,
@@ -35,28 +36,31 @@ export const OFluiFilterPanel = (props: OFluiFilterPanelProps) => {
         addSelected,
         removeSelected,
         applyFilters,
-        clearFilters } = useFilterPanel(props);
+        clearFilters
+    } = useFilterPanel(props)
 
-    const { t } = useLanguage(props.lang);
+    const { t } = useLanguage(props.lang)
 
-    const optionsContent = options != undefined ? options.map((z: any) => {
-        const checked = selected.find(r => r == z) != undefined;
+    const optionsContent = options !== undefined
+        ? options.map((z: any) => {
+            const checked = selected.find(r => r === z) !== undefined
 
-        const onChange = (_e: any, isChecked: boolean) => isChecked
-            ? addSelected(z)
-            : removeSelected(z);
+            const onChange = (_e: any, isChecked: boolean) => isChecked
+                ? addSelected(z)
+                : removeSelected(z)
 
-        const displayValue = toDisplayValue(props.column, z);
+            const displayValue = toDisplayValue(props.column, z)
 
-        return <OFluiCheckbox key={z}
-            label={displayValue}
-            checked={checked}
-            onChange={onChange} />;
-    }) : <></>;
+            return <OFluiCheckbox key={z}
+                label={displayValue}
+                checked={checked}
+                onChange={onChange} />
+        })
+        : <></>
 
     const renderFooter = () => {
-        return options != undefined ?
-            <>
+        return options !== undefined
+            ? <>
                 <PrimaryButton
                     onClick={applyFilters}
                     style={{ marginRight: 8 }}
@@ -84,16 +88,16 @@ export const OFluiFilterPanel = (props: OFluiFilterPanelProps) => {
             {options !== undefined &&
                 <>
                     <TagPicker
-                        resolveDelay={500}
-                        onResolveSuggestions={onGetSuggestions}
-                        inputProps={{ autoFocus: true }}
-                        onChange={onFilterSelected}
                         selectedItems={[]}
+                        resolveDelay={500}
+                        inputProps={{ autoFocus: true }}
+                        onResolveSuggestions={onGetSuggestions}
+                        onChange={onFilterSelected}
                     />
 
                     {optionsContent}
                 </>
             }
         </Panel>
-    </>;
+    </>
 }

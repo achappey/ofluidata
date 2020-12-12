@@ -1,21 +1,21 @@
-import * as React from "react";
-import { Spinner, Stack } from "@fluentui/react";
+import * as React from 'react'
+import { Spinner, Stack } from '@fluentui/react'
 
-import { useList } from "./use-List";
+import { useList } from './use-List'
 
-import { OFluiCommandBar } from "../CommandBar/CommandBar";
-import { OFluiDetailsList } from "../DetailsList/DetailsList";
-import { OFluiErrorMessageBar } from "../MessageBar/Error/ErrorMessageBar";
-import { OFluiItemConfig, OFluiListConfig } from "../../types/config";
-import { OFluiFilterPanel } from "../Panels/Filter/FilterPanel";
-import { OFluiDisplayItemPanel } from "../Panels/DisplayItem/DisplayItemPanel";
-import { OFluiSelectColumnsPanel } from "../Panels/SelectColumns/SelectColumnsPanel";
-import { OFluiEditItemPanel } from "../Panels/EditItem/EditItemPanel";
-import { OFluiFilterPane } from "../Panes/Filter/FilterPane";
-import { OFluiPanelContainer } from "../Panels/Container/Container";
-import { OFluiListPanel } from "../Panels/List/ListPanel";
-import { OFluiProgressIndicator } from "../ProgressIndicator/ProgressIndicator";
-import { OFluiActionPanel } from "../Panels/Action/ActionPanel";
+import { OFluiCommandBar } from '../CommandBar/CommandBar'
+import { OFluiDetailsList } from '../DetailsList/DetailsList'
+import { OFluiErrorMessageBar } from '../MessageBar/Error/ErrorMessageBar'
+import { OFluiItemConfig, OFluiListConfig } from '../../types/config'
+import { OFluiFilterPanel } from '../Panels/Filter/FilterPanel'
+import { OFluiDisplayItemPanel } from '../Panels/DisplayItem/DisplayItemPanel'
+import { OFluiSelectColumnsPanel } from '../Panels/SelectColumns/SelectColumnsPanel'
+import { OFluiEditItemPanel } from '../Panels/EditItem/EditItemPanel'
+import { OFluiFilterPane } from '../Panes/Filter/FilterPane'
+import { OFluiPanelContainer } from '../Panels/Container/Container'
+import { OFluiListPanel } from '../Panels/List/ListPanel'
+import { OFluiProgressIndicator } from '../ProgressIndicator/ProgressIndicator'
+import { OFluiActionPanel } from '../Panels/Action/ActionPanel'
 
 export interface OFluiListProps extends OFluiListConfig, OFluiItemConfig {
 
@@ -77,19 +77,18 @@ export const OFluiList = (props: OFluiListProps) => {
         getNextPage,
         applyFilters,
         onViewChange,
-        onOrderChanged
-    } = useList(props);
+        onOrderChanged, t
+    } = useList(props)
 
     const onRenderMissingItem = () => {
-        if (getNextPage !== undefined && !nextPageLoading)
-            getNextPage();
+        if (getNextPage !== undefined && !nextPageLoading) { getNextPage() }
 
-        return <Spinner />;
+        return <Spinner />
     }
 
-    const contentStyle = { root: { width: showFilterPane ? "75%" : "100%" } };
-    const rootStyle = { root: { paddingLeft: 24, paddingRight: 14 } };
-    const paneStyle = { root: { width: "100%" } };
+    const contentStyle = { root: { width: showFilterPane ? '75%' : '100%' } }
+    const rootStyle = { root: { paddingLeft: 24, paddingRight: 14 } }
+    const paneStyle = { root: { width: '100%' } }
 
     return <>
         {errorMessage &&
@@ -213,6 +212,7 @@ export const OFluiList = (props: OFluiListProps) => {
                 onLookupSearch={props.onLookupSearch}
                 onDismiss={onDismissEditForm} />
         }
+
         {
             filterPanelProperty && getOptions && applyFilters &&
             <OFluiFilterPanel isOpen={true}
@@ -224,7 +224,6 @@ export const OFluiList = (props: OFluiListProps) => {
             />
         }
 
-
         {
             selectColumns &&
             <OFluiSelectColumnsPanel
@@ -235,12 +234,11 @@ export const OFluiList = (props: OFluiListProps) => {
                 onDismiss={onDismissSelectColumns} />
         }
 
-
         {
             newItem &&
             <OFluiEditItemPanel
                 isOpen={true}
-                headerText={props.itemName}
+                headerText={`${t('new')} ${props.itemName}`}
                 item={newItem}
                 columns={props.columns}
                 readItem={props.newItem}
@@ -248,5 +246,5 @@ export const OFluiList = (props: OFluiListProps) => {
                 onLookupSearch={props.onLookupSearch}
                 onDismiss={onDismissNewForm} />
         }
-    </>;
+    </>
 }

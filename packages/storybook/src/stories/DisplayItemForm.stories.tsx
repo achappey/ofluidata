@@ -1,23 +1,23 @@
 
-import * as React from 'react';
+import * as React from 'react'
 
-import { OFluiDisplayItemForm } from "ofluidata-core";
-import { mockGroups, mockItem } from '../helpers/mock-data';
+import { OFluiDisplayItemForm } from 'ofluidata-core'
+import { mockGroups, mockItem } from '../helpers/mock-data'
 
 const Template = (args: any) => <OFluiDisplayItemForm
-    lang={"en"}
-    {...args} />;
+    lang={'en'}
+    {...args} />
 
-export const Default = Template.bind({});
+export const Default = Template.bind({})
 
-export const Dutch = Template.bind({});
-Dutch.args = { lang: "nl" };
+export const Dutch = Template.bind({})
+Dutch.args = { lang: 'nl' }
 
-export const Edit = Template.bind({});
+export const Edit = Template.bind({})
 Edit.argTypes = { onEdit: { action: 'edit' } }
 
 export default {
-    title: "Core/Forms/DisplayItem",
+    title: 'Core/Forms/DisplayItem',
     args: {
         groups: mockGroups(),
         item: mockItem()

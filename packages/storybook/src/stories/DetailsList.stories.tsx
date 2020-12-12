@@ -1,24 +1,24 @@
 
-import * as React from 'react';
+import * as React from 'react'
 
-import { OFluiDetailsList } from 'ofluidata-core';
+import { OFluiDetailsList } from 'ofluidata-core'
 
-import { mockColumns, mockItems } from '../helpers/mock-data';
+import { mockColumns, mockItems } from '../helpers/mock-data'
 
 const Template = (args: any) => <OFluiDetailsList
-    lang={"en"}
+    lang={'en'}
     properties={mockColumns}
     items={mockItems()}
-    {...args} />;
+    {...args} />
 
-export const Default = Template.bind({});
+export const Default = Template.bind({})
 
-export const Dutch = Template.bind({});
-Dutch.args = { lang: "nl" };
+export const Dutch = Template.bind({})
+Dutch.args = { lang: 'nl' }
 
-export const SelectColumns = Template.bind({});
-SelectColumns.argTypes = { onSelectColumns: { action: 'selectColumns' } };
+export const SelectColumns = Template.bind({})
+SelectColumns.argTypes = { onSelectColumns: { action: 'selectColumns' } }
 
 export default {
-    title: "Core/DetailsList"
+    title: 'Core/DetailsList'
 }

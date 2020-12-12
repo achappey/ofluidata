@@ -1,4 +1,4 @@
-import 'office-ui-fabric-react/dist/css/fabric.css';
-import { initializeIcons } from '@uifabric/icons';
+import 'office-ui-fabric-react/dist/css/fabric.css'
+import { initializeIcons } from '@uifabric/icons'
 
-export const initFluent = () => initializeIcons();
+export const initFluent = () => initializeIcons()

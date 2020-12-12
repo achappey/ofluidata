@@ -1,45 +1,45 @@
 
-import * as React from 'react';
+import * as React from 'react'
 
-import { OFluiODataList, OFluiODataTiles } from "ofluidata";
-import { defaultConfig } from '../helpers/mock-odata';
+import { OFluiODataList, OFluiODataTiles } from 'ofluidata'
+import { defaultConfig } from '../helpers/mock-odata'
 
-const url = "https://services.odata.org/V3/(S(readwrite))/OData/OData.svc";
+const url = 'https://services.odata.org/V3/(S(readwrite))/OData/OData.svc'
 
 const Template = (args: any) => <OFluiODataList
     config={defaultConfig}
     url={url}
-    {...args} />;
+    {...args} />
 
 export const Tiles = (args: any) => <OFluiODataTiles
     config={defaultConfig}
     url={url}
     {...args} />
 
-export const Products = Template.bind({});
+export const Products = Template.bind({})
 
 Products.args = {
-    entityType: "ODataDemo.Product"
-};
+    entityType: 'ODataDemo.Product'
+}
 
-export const Category = Template.bind({});
+export const Category = Template.bind({})
 
 Category.args = {
-    entityType: "ODataDemo.Category"
-};
+    entityType: 'ODataDemo.Category'
+}
 
-export const Persons = Template.bind({});
+export const Persons = Template.bind({})
 
 Persons.args = {
-    entityType: "ODataDemo.Person"
-};
+    entityType: 'ODataDemo.Person'
+}
 
-export const Advertisements = Template.bind({});
+export const Advertisements = Template.bind({})
 
 Advertisements.args = {
-    entityType: "ODataDemo.Advertisement"
-};
+    entityType: 'ODataDemo.Advertisement'
+}
 
 export default {
-    title: "OData.org/ODataDemo (Read-Write)"
+    title: 'OData.org/ODataDemo (Read-Write)'
 }

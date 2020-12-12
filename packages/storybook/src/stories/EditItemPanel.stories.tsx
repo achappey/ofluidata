@@ -1,30 +1,29 @@
 
-import * as React from 'react';
-import faker from "faker";
+import * as React from 'react'
 
-import { OFluiEditItemPanel } from "ofluidata-core";
-import { itemHeader, mockColumns, mockError, mockItem, timeOut } from '../helpers/mock-data';
+import { OFluiEditItemPanel } from 'ofluidata-core'
+import { itemHeader, mockColumns, mockError, mockItem } from '../helpers/mock-data'
 
 const Template = (args: any) => <OFluiEditItemPanel
-    lang={"en"}
+    lang={'en'}
     isOpen={true}
-    {...args} />;
+    {...args} />
 
-export const Default = Template.bind({});
+export const Default = Template.bind({})
 
-export const Dutch = Template.bind({});
-Dutch.args = { lang: "nl" };
+export const Dutch = Template.bind({})
+Dutch.args = { lang: 'nl' }
 
-export const Header = Template.bind({});
-Header.args = { header: itemHeader };
+export const Header = Template.bind({})
+Header.args = { header: itemHeader }
 
-export const Error = Template.bind({});
+export const Error = Template.bind({})
 Error.args = {
     onSave: mockError
-};
+}
 
 export default {
-    title: "Core/Panels/EditItem",
+    title: 'Core/Panels/EditItem',
     args: {
         columns: mockColumns,
         item: mockItem()

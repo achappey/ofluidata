@@ -1,12 +1,12 @@
-import * as React from "react";
+import * as React from 'react'
 
-import { ContextualMenu, DefaultPalette, IPanelProps, Label, Link, Stack } from "@fluentui/react";
+import { ContextualMenu, DefaultPalette, IPanelProps, Label, Link, Stack } from '@fluentui/react'
 
-import { OFluiCheckbox } from "../../Controls/Checkbox/Checkbox";
-import { OFluiIconButton } from "../../Controls/Buttons/IconButton/IconButton";
-import { OFluiColumn } from "../../../types/oflui";
-import { useLanguage } from "ofluidata-translations";
-import { toDisplayValue } from "../../../utilities/oflui";
+import { OFluiCheckbox } from '../../Controls/Checkbox/Checkbox'
+import { OFluiIconButton } from '../../Controls/Buttons/IconButton/IconButton'
+import { OFluiColumn } from '../../../types/oflui'
+import { useLanguage } from 'ofluidata-translations'
+import { toDisplayValue } from '../../../utilities/oflui'
 
 export interface OFluiFilterPaneProps extends IPanelProps {
     columns: OFluiColumn[],
@@ -21,168 +21,69 @@ interface FilterValues {
     values: FilterValue[]
 }
 
-export const OFluiFilterPane = (props: OFluiFilterPaneProps) => {
-    const { t } = useLanguage(props.lang);
-
-    const [filterValues, setFilterValues] = React.useState<FilterValues[]>([]);
-
-    React.useEffect(() => {
-        setFilterValues(toDefaultFilters(props.columns, props.filters, props.items))
-    }, [props.isOpen]);
-
-    React.useEffect(() => {
-
-    }, [props.filters]);
-
-    const hasFilters = props.filters != undefined && Object.keys(props.filters).length > 0;
-
-    const headerStyle = { root: { marginBottom: 18 } };
-    const headerTitleStyle = { margin: 0 };
-
-    const rootStyles = {
-        root: {
-            paddingTop: 23,
-            paddingBottom: 20,
-            paddingLeft: 16,
-            width: "100%",
-            borderLeftStyle: "solid",
-            borderLeftColor: DefaultPalette.neutralLighter
-        }
-    };
-
-
-    const onClear = (column: OFluiColumn) => {
-        const newValue = props.filters ? { ...props.filters } : {};
-        delete newValue[column.name];
-
-        props.onFilterChange(newValue);
+export const toDefaultFilter = (column: OFluiColumn,
+    currentFilters?: { [id: string]: any[]; },
+    items?: any): FilterValues => {
+    return {
+        column: column,
+        values: currentFilters &&
+            currentFilters[column.name] &&
+            currentFilters[column.name].length > 0
+            ? currentFilters[column.name]
+                .map(g => {
+                    return {
+                        filter: g,
+                        checked: true
+                    }
+                })
+            : items
+                ? []
+                /*  toSummary(column, items, column.name).map(p => {
+                      return {
+                          filter: p,
+                          checked: false
+                      };
+                  }) */
+                : []
     }
-
-    const filterContent = filterValues.map(v => {
-
-
-        const onRemove = () => onClear(v.column);
-        const onShowAll = props.onShowAll ? () => props.onShowAll!(v.column) : undefined;
-        const onToggle = (filter: any, checked: boolean) => {
-            let currentFilter = props.filters && props.filters[v.column.name] ? [...props.filters[v.column.name]] : [];
-
-            if (checked) {
-                currentFilter.push(filter);
-
-            }
-            else {
-                currentFilter = currentFilter.filter(a => a != filter);
-            }
-
-            const newFilters: any = {
-                ...props.filters,
-            }
-
-            if (currentFilter.length == 0) {
-                delete newFilters[v.column.name];
-            }
-            else {
-                newFilters[v.column.name] = currentFilter;
-            }
-
-
-            props.onFilterChange(newFilters);
-
-        }
-        return <OFluiFilterPaneColumn
-            column={v.column}
-            filters={v.values}
-            onToggle={onToggle}
-            onRemove={onRemove}
-            onShowAll={onShowAll}
-        />;
-    });
-
-    const onDismiss = props.onDismiss ? () => props.onDismiss!() : undefined;
-
-    return props.isOpen ? <Stack styles={rootStyles}>
-        <Stack.Item>
-            <Stack horizontal
-                horizontalAlign="space-between"
-                styles={headerStyle}>
-                <Stack.Item>
-                    <h2 style={headerTitleStyle}>
-                        {t('filters')}
-                    </h2>
-                </Stack.Item>
-                <Stack.Item>
-                    <Stack horizontal>
-                        <Stack.Item>
-                            <OFluiIconButton
-                                disabled={!hasFilters}
-                                icon={"ClearFilter"}
-                            />
-
-                        </Stack.Item>
-
-                        {onDismiss &&
-                            <Stack.Item>
-                                <OFluiIconButton
-                                    icon={"Clear"}
-                                    onClick={onDismiss}
-                                />
-                            </Stack.Item>
-                        }
-                    </Stack>
-                </Stack.Item>
-            </Stack>
-        </Stack.Item>
-        <Stack.Item>
-            <Stack>
-                {filterContent}
-            </Stack>
-        </Stack.Item>
-    </Stack> : <></>
 }
 
-interface FilterValue {
-    filter: any,
-    checked: boolean
-}
-
-export interface OFluiFilterPaneColumnProps {
-    column: OFluiColumn,
-    filters: FilterValue[],
-    onRemove: () => void,
-    onToggle: (filter: any, checked: boolean) => void
-    onShowAll?: () => void
-    lang?: string
+export const toDefaultFilters = (columns: OFluiColumn[],
+    currentFilters?: { [id: string]: any[]; },
+    items?: any): FilterValues[] => {
+    return columns.map(f => toDefaultFilter(f, currentFilters, items))
 }
 
 const OFluiFilterPaneColumn = (props: OFluiFilterPaneColumnProps) => {
-    const { t } = useLanguage(props.lang);
-    const [showContextMenu, setShowContextMenu] = React.useState<boolean>(false);
-    const contextMenuRef = React.useRef(null);
+    const { t } = useLanguage(props.lang)
+    const [showContextMenu, setShowContextMenu] = React.useState<boolean>(false)
+    const contextMenuRef = React.useRef(null)
 
     const items = [{
         key: 'remove',
         text: t('delete'),
         onClick: () => {
-            props.onRemove();
+            props.onRemove()
 
-            setShowContextMenu(false);
+            setShowContextMenu(false)
         }
-    }];
+    }]
 
     const filters = props.filters.map((g) => {
         const onClick = (_ev: any, checked: any) => props
-            .onToggle(g.filter, checked);
+            .onToggle(g.filter, checked)
 
-        const displayValue = toDisplayValue(props.column, g.filter);
+        const displayValue = toDisplayValue(props.column, g.filter)
 
         return <OFluiCheckbox
-            onChange={onClick}
-            defaultChecked={g.checked}
+            key={displayValue}
             label={displayValue}
+            defaultChecked={g.checked}
+            onChange={onClick}
         />
-    });
+    })
 
-    const toggleContext = () => setShowContextMenu(!showContextMenu);
+    const toggleContext = () => setShowContextMenu(!showContextMenu)
 
     return <Stack.Item>
         <Stack>
@@ -197,7 +98,7 @@ const OFluiFilterPaneColumn = (props: OFluiFilterPaneColumnProps) => {
                     <Stack.Item>
                         <div ref={contextMenuRef}>
                             <OFluiIconButton
-                                icon={"More"}
+                                icon={'More'}
                                 onClick={toggleContext}
                             />
                         </div>
@@ -222,37 +123,130 @@ const OFluiFilterPaneColumn = (props: OFluiFilterPaneColumnProps) => {
     </Stack.Item>
 }
 
+export const OFluiFilterPane = (props: OFluiFilterPaneProps) => {
+    const { t } = useLanguage(props.lang)
 
-export const toDefaultFilter = (column: OFluiColumn,
-    currentFilters?: { [id: string]: any[]; },
-    items?: any): FilterValues => {
-    return {
-        column: column,
-        values: currentFilters
-            && currentFilters[column.name]
-            && currentFilters[column.name].length > 0
-            ? currentFilters[column.name]
-                .map(g => {
-                    return {
-                        filter: g,
-                        checked: true,
-                    }
-                }) : items ? []
-                /*  toSummary(column, items, column.name).map(p => {
-                      return {
-                          filter: p,
-                          checked: false
-                      };
-                  })*/
-                : []
+    const [filterValues, setFilterValues] = React.useState<FilterValues[]>([])
+
+    React.useEffect(() => {
+        setFilterValues(toDefaultFilters(props.columns, props.filters, props.items))
+    }, [props.isOpen])
+
+    React.useEffect(() => {
+
+    }, [props.filters])
+
+    const hasFilters = props.filters !== undefined && Object.keys(props.filters).length > 0
+
+    const headerStyle = { root: { marginBottom: 18 } }
+    const headerTitleStyle = { margin: 0 }
+
+    const rootStyles = {
+        root: {
+            paddingTop: 23,
+            paddingBottom: 20,
+            paddingLeft: 16,
+            width: '100%',
+            borderLeftStyle: 'solid',
+            borderLeftColor: DefaultPalette.neutralLighter
+        }
     }
 
+    const onClear = (column: OFluiColumn) => {
+        const newValue = props.filters ? { ...props.filters } : {}
+        delete newValue[column.name]
 
+        props.onFilterChange(newValue)
+    }
+
+    const filterContent = filterValues.map(v => {
+        const onRemove = () => onClear(v.column)
+        const onShowAll = props.onShowAll ? () => props.onShowAll!(v.column) : undefined
+        const onToggle = (filter: any, checked: boolean) => {
+            let currentFilter = props.filters && props.filters[v.column.name] ? [...props.filters[v.column.name]] : []
+
+            if (checked) {
+                currentFilter.push(filter)
+            } else {
+                currentFilter = currentFilter.filter(a => a !== filter)
+            }
+
+            const newFilters: any = {
+                ...props.filters
+            }
+
+            if (currentFilter.length === 0) {
+                delete newFilters[v.column.name]
+            } else {
+                newFilters[v.column.name] = currentFilter
+            }
+
+            props.onFilterChange(newFilters)
+        }
+        return <OFluiFilterPaneColumn
+            key={v.column.name}
+            column={v.column}
+            filters={v.values}
+            onToggle={onToggle}
+            onRemove={onRemove}
+            onShowAll={onShowAll}
+        />
+    })
+
+    const onDismiss = props.onDismiss ? () => props.onDismiss!() : undefined
+
+    return props.isOpen
+        ? <Stack styles={rootStyles}>
+            <Stack.Item>
+                <Stack horizontal
+                    horizontalAlign="space-between"
+                    styles={headerStyle}>
+                    <Stack.Item>
+                        <h2 style={headerTitleStyle}>
+                            {t('filters')}
+                        </h2>
+                    </Stack.Item>
+                    <Stack.Item>
+                        <Stack horizontal>
+                            <Stack.Item>
+                                <OFluiIconButton
+                                    disabled={!hasFilters}
+                                    icon={'ClearFilter'}
+                                />
+
+                            </Stack.Item>
+
+                            {onDismiss &&
+                                <Stack.Item>
+                                    <OFluiIconButton
+                                        icon={'Clear'}
+                                        onClick={onDismiss}
+                                    />
+                                </Stack.Item>
+                            }
+                        </Stack>
+                    </Stack.Item>
+                </Stack>
+            </Stack.Item>
+            <Stack.Item>
+                <Stack>
+                    {filterContent}
+                </Stack>
+            </Stack.Item>
+        </Stack>
+        : <></>
 }
 
+interface FilterValue {
+    filter: any,
+    checked: boolean
+}
 
-export const toDefaultFilters = (columns: OFluiColumn[],
-    currentFilters?: { [id: string]: any[]; },
-    items?: any): FilterValues[] => {
-    return columns.map(f => toDefaultFilter(f, currentFilters, items));
+export interface OFluiFilterPaneColumnProps {
+    column: OFluiColumn,
+    filters: FilterValue[],
+    onRemove: () => void,
+    onToggle: (filter: any, checked: boolean) => void
+    onShowAll?: () => void
+    lang?: string
 }

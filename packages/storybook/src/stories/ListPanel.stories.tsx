@@ -1,13 +1,13 @@
 
-import * as React from 'react';
+import * as React from 'react'
 
-import { OFluiListPanel } from "ofluidata-core";
-import { itemHeader, mockColumns, mockStore, mockViews } from '../helpers/mock-data';
+import { OFluiListPanel } from 'ofluidata-core'
+import { itemHeader, mockColumns, mockStore, mockViews } from '../helpers/mock-data'
 
-const store = mockStore();
+const store = mockStore()
 
 const Template = (args: any) => <OFluiListPanel
-    lang={"en"}
+    lang={'en'}
     isOpen={true}
     columns={mockColumns}
     views={mockViews}
@@ -15,17 +15,17 @@ const Template = (args: any) => <OFluiListPanel
     getItem={store.getItem}
     createItem={store.createItem}
     updateItem={store.updateItem}
-    {...args} />;
+    {...args} />
 
-export const Default = Template.bind({});
+export const Default = Template.bind({})
 
-export const Dutch = Template.bind({});
-Dutch.args = { lang: "nl" };
+export const Dutch = Template.bind({})
+Dutch.args = { lang: 'nl' }
 
-export const Header = Template.bind({});
-Header.args = { header: itemHeader };
+export const Header = Template.bind({})
+Header.args = { header: itemHeader }
 
 export default {
-    title: "Core/Panels/List",
+    title: 'Core/Panels/List',
     argTypes: { onDismiss: { action: 'dismiss' } }
 }

@@ -1,104 +1,104 @@
+/* eslint-disable no-unused-vars */
 export type ODataConfig = {
-  url: string,
-  version: string;
-  entityTypes: { [id: string]: EntityType; };
-  enumTypes: { [id: string]: EnumType; };
-  complexTypes: { [id: string]: ComplexType; };
-  endpoints: Endpoint[]
+    url: string,
+    version: string;
+    entityTypes: { [id: string]: EntityType; };
+    enumTypes: { [id: string]: EnumType; };
+    complexTypes: { [id: string]: ComplexType; };
+    endpoints: Endpoint[]
 }
 
 export interface Parameter {
-  name: string;
-  type: string;
+    name: string;
+    type: string;
 }
 
 export interface Action {
-  name: string;
-  parameters?: Parameter[]
-  returnType?: string;
+    name: string;
+    parameters?: Parameter[]
+    returnType?: string;
 }
 
 export interface Function {
-  name: string;
-  parameters?: Parameter[]
-  returnType?: string;
+    name: string;
+    parameters?: Parameter[]
+    returnType?: string;
 }
 
 export interface Endpoint {
-  name: string;
-  url: string;
-  kind: string;
+    name: string;
+    url: string;
+    kind: string;
 }
 
 export interface EntitySet {
-  name: string;
+    name: string;
 }
 
 export interface Singleton {
-  name: string;
+    name: string;
 }
 
 export interface EnumType {
-  members: Member[];
-  name: string;
+    members: Member[];
+    name: string;
 }
 
 export interface Member {
-  name: string;
-  value: any;
+    name: string;
+    value: any;
 }
 
 export interface ComplexType {
-  properties: Property[];
-  name: string;
-  baseType?: string | null;
+    properties: Property[];
+    name: string;
+    baseType?: string | null;
 }
 
 export interface EntityType {
-  name: string;
-  typeName: string;
-  properties: Property[],
-  entitySets: EntitySet[],
-  singletons: Singleton[],
-  actions: Action[],
-  functions: Function[],
-  baseType?: string;
-  key?: string;
+    name: string;
+    typeName: string;
+    properties: Property[],
+    entitySets: EntitySet[],
+    singletons: Singleton[],
+    actions: Action[],
+    functions: Function[],
+    baseType?: string;
+    key?: string;
 }
 
-
 export type Query = {
-  fields: string[];
-  order?: { [id: string]: Order; }
-  filters?: { [id: string]: any[]; }
-  pageSize?: number,
-  page?: number,
-  totalPages?: number
+    fields: string[];
+    order?: { [id: string]: Order; }
+    filters?: { [id: string]: any[]; }
+    pageSize?: number,
+    page?: number,
+    totalPages?: number
 }
 
 export interface Property {
-  name: string;
-  type: PropertyType;
-  typeName?: string;
-  required?: boolean;
-  isCollection?: boolean;
-  computed?: boolean;
-  options?: any[]
+    name: string;
+    type: PropertyType;
+    typeName?: string;
+    required?: boolean;
+    isCollection?: boolean;
+    computed?: boolean;
+    options?: any[]
 }
 
 export enum PropertyType {
-  string,
-  number,
-  datetime,
-  duration,
-  guid,
-  complex,
-  enum,
-  navigation,
-  boolean
+    string,
+    number,
+    datetime,
+    duration,
+    guid,
+    complex,
+    enum,
+    navigation,
+    boolean
 }
 
 export enum Order {
-  Ascending = "asc",
-  Descending = "desc"
+    Ascending = 'asc',
+    Descending = 'desc'
 }

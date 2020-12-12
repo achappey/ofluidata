@@ -8,4 +8,3 @@ export * from './DateTime/DateTimeEditField'
 export * from './Lookup/LookupEditField'
 export * from './Boolean/BooleanEditField'
 export * from './Choice/ChoiceEditField'
-

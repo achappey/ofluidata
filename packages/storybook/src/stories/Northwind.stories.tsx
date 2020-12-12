@@ -1,63 +1,63 @@
 
-import * as React from 'react';
+import * as React from 'react'
 
-import { OFluiODataList, OFluiODataTiles } from "ofluidata";
-import { defaultConfig } from '../helpers/mock-odata';
+import { OFluiODataList, OFluiODataTiles } from 'ofluidata'
+import { defaultConfig } from '../helpers/mock-odata'
 
-const url = "https://services.odata.org/V3/Northwind/Northwind.svc";
+const url = 'https://services.odata.org/V3/Northwind/Northwind.svc'
 
 const Template = (args: any) => <OFluiODataList
     config={defaultConfig}
     url={url}
-    {...args} />;
+    {...args} />
 
 export const Tiles = (args: any) => <OFluiODataTiles
     lang={defaultConfig}
     url={url}
     {...args} />
 
-export const Customers = Template.bind({});
+export const Customers = Template.bind({})
 
 Customers.args = {
-    entityType: "NorthwindModel.Customer"
-};
+    entityType: 'NorthwindModel.Customer'
+}
 
-export const Employees = Template.bind({});
+export const Employees = Template.bind({})
 
 Employees.args = {
-    entityType: "NorthwindModel.Employee"
-};
+    entityType: 'NorthwindModel.Employee'
+}
 
-export const Orders = Template.bind({});
+export const Orders = Template.bind({})
 
 Orders.args = {
-    entityType: "NorthwindModel.Order"
-};
+    entityType: 'NorthwindModel.Order'
+}
 
-export const Products = Template.bind({});
+export const Products = Template.bind({})
 
 Products.args = {
-    entityType: "NorthwindModel.Product"
-};
+    entityType: 'NorthwindModel.Product'
+}
 
-export const Regions = Template.bind({});
+export const Regions = Template.bind({})
 
 Regions.args = {
-    entityType: "NorthwindModel.Region"
-};
+    entityType: 'NorthwindModel.Region'
+}
 
-export const Suppliers = Template.bind({});
+export const Suppliers = Template.bind({})
 
 Suppliers.args = {
-    entityType: "NorthwindModel.Supplier"
-};
+    entityType: 'NorthwindModel.Supplier'
+}
 
-export const Territories = Template.bind({});
+export const Territories = Template.bind({})
 
 Territories.args = {
-    entityType: "NorthwindModel.Territory"
-};
+    entityType: 'NorthwindModel.Territory'
+}
 
 export default {
-    title: "OData.org/Northwind (Read-Only)"
+    title: 'OData.org/Northwind (Read-Only)'
 }

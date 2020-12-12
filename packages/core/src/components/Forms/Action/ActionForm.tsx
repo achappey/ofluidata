@@ -1,10 +1,10 @@
-import * as React from 'react';
-import { useState } from 'react';
+import * as React from 'react'
+import { useState } from 'react'
+import { Spinner } from '@fluentui/react'
 
-import { OFluiAction, OFluiColumn, OFluiLookup } from '../../../types/oflui';
-import { OFluiEditItemForm } from '../EditItem/EditItem';
-import { OFluiDisplayItemForm } from '../DisplayItem/DisplayItemForm';
-import { Spinner } from '@fluentui/react';
+import { OFluiAction, OFluiColumn, OFluiLookup } from '../../../types/oflui'
+import { OFluiEditItemForm } from '../EditItem/EditItem'
+import { OFluiDisplayItemForm } from '../DisplayItem/DisplayItemForm'
 
 export type OFluiActionFormProps = {
     sourceItem: any,
@@ -15,19 +15,19 @@ export type OFluiActionFormProps = {
 }
 
 export const OFluiActionForm = (props: OFluiActionFormProps) => {
-    const [item, setItem] = useState<any>(props.paramsItem ? props.paramsItem : {});
-    const [resultItem, setResultItem] = useState<any | undefined>(undefined);
-    const [loadingResult, setLoadingResult] = useState<boolean>(false);
+    const [item, setItem] = useState<any>(props.paramsItem ? props.paramsItem : {})
+    const [resultItem, setResultItem] = useState<any | undefined>(undefined)
+    const [loadingResult, setLoadingResult] = useState<boolean>(false)
 
     const onChange = (item: any) => {
-        setItem(item);
-        setLoadingResult(true);
+        setItem(item)
+        setLoadingResult(true)
 
         props.action
             .onExecute(props.sourceItem, item)
             .then(setResultItem)
             .finally(() => setLoadingResult(false))
-    };
+    }
 
     const onValidation = () => {
 
@@ -57,6 +57,5 @@ export const OFluiActionForm = (props: OFluiActionFormProps) => {
             }
 
         </>
-    );
-
-};
+    )
+}

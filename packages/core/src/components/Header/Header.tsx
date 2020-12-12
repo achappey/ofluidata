@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react'
 
 import {
     DefaultPalette,
@@ -6,12 +6,11 @@ import {
     IconButton,
     Image,
     IStackItemStyles,
-    Stack,
-} from "@fluentui/react";
-import { OFluiButton, OFluiItemHeader } from "../../types/oflui";
-import { OFluiErrorMessageBar } from "../MessageBar/Error/ErrorMessageBar";
-import { OFluiButtonRow } from "../Controls/Buttons/ButtonRow/ButtonRow";
-
+    Stack
+} from '@fluentui/react'
+import { OFluiButton, OFluiItemHeader } from '../../types/oflui'
+import { OFluiErrorMessageBar } from '../MessageBar/Error/ErrorMessageBar'
+import { OFluiButtonRow } from '../Controls/Buttons/ButtonRow/ButtonRow'
 
 export interface OFluiHeaderProps {
     header: OFluiItemHeader,
@@ -20,32 +19,31 @@ export interface OFluiHeaderProps {
     onClose?: () => void
 }
 
-
 const headerStyles: IStackItemStyles = {
     root: {
         background: DefaultPalette.themePrimary,
         color: DefaultPalette.white,
-        height: 88,
-    },
-};
+        height: 88
+    }
+}
 
 const headerTitleStyles: IStackItemStyles = {
     root: {
-        fontSize: 15,
-    },
-};
+        fontSize: 15
+    }
+}
 
 const headerTextStyles: IStackItemStyles = {
     root: {
-        fontSize: 13,
-    },
-};
+        fontSize: 13
+    }
+}
 
 const linkStyles: IButtonStyles = {
     root: {
-        color: DefaultPalette.white,
-    },
-};
+        color: DefaultPalette.white
+    }
+}
 
 export const OFluiHeader = (props: OFluiHeaderProps) => {
     return (
@@ -78,7 +76,7 @@ export const OFluiHeader = (props: OFluiHeaderProps) => {
                         <Stack.Item disableShrink >
                             <IconButton styles={linkStyles}
                                 iconProps={{
-                                    iconName: "ChromeClose"
+                                    iconName: 'ChromeClose'
                                 }}
                                 onClick={props.onClose}
                             />
@@ -89,14 +87,12 @@ export const OFluiHeader = (props: OFluiHeaderProps) => {
 
             <OFluiErrorMessageBar errorMessage={props.errorMessage} />
 
-            {props.buttons != undefined &&
+            {props.buttons !== undefined &&
                 <Stack.Item>
                     <OFluiButtonRow buttons={props.buttons} />
                 </Stack.Item>
             }
 
         </Stack>
-    );
+    )
 }
-
-

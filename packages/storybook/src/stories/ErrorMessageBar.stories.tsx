@@ -1,28 +1,28 @@
 
-import * as React from 'react';
-import faker from "faker";
+import * as React from 'react'
+import faker from 'faker'
 
-import { OFluiErrorMessageBar } from "ofluidata-core";
+import { OFluiErrorMessageBar } from 'ofluidata-core'
 
 const Template = (args: any) => <OFluiErrorMessageBar
-  errorMessage={faker.lorem.sentence()}
-  {...args} />;
+    errorMessage={faker.lorem.sentence()}
+    {...args} />
 
-export const Default = Template.bind({});
-Default.args = { errorMessage: faker.lorem.sentence() };
+export const Default = Template.bind({})
+Default.args = { errorMessage: faker.lorem.sentence() }
 
-export const MultipleErrors = Template.bind({});
+export const MultipleErrors = Template.bind({})
 MultipleErrors.args = {
-  errorMessage:
-    [
-      faker.lorem.sentence(),
-      faker.lorem.sentence()
-    ]
-};
+    errorMessage:
+        [
+            faker.lorem.sentence(),
+            faker.lorem.sentence()
+        ]
+}
 
-export const Dismiss = Template.bind({});
+export const Dismiss = Template.bind({})
 Dismiss.argTypes = { onDismiss: { action: 'dismiss' } }
 
 export default {
-  title: "Core/MessageBar/Error"
+    title: 'Core/MessageBar/Error'
 }

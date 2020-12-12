@@ -1,13 +1,14 @@
-import * as React from "react";
+/* eslint-disable react/prop-types */
+import * as React from 'react'
 
-import { Spinner } from "@fluentui/react";
+import { Spinner } from '@fluentui/react'
 
-import { useLanguage } from "ofluidata-translations";
-import { OFluiErrorMessageBar } from "ofluidata-core";
+import { useLanguage } from 'ofluidata-translations'
+import { OFluiErrorMessageBar } from 'ofluidata-core'
 
-import HttpContext from "../../../context/HttpContext";
-import ODataContext from "../../../context/ODataContext";
-import { useOData } from "../../../hooks/use-OData";
+import HttpContext from '../../../context/HttpContext'
+import ODataContext from '../../../context/ODataContext'
+import { useOData } from '../../../hooks/use-OData'
 
 export interface OFluiODataProviderProps {
     url: string,
@@ -16,17 +17,17 @@ export interface OFluiODataProviderProps {
 }
 
 export const OFluiODataProvider: React.FunctionComponent<OFluiODataProviderProps> = (props) => {
-    const http = React.useContext(HttpContext);
-    const loadMetadata = useOData(props.url, http);
-    const { t } = useLanguage(props.lang);
+    const http = React.useContext(HttpContext)
+    const loadMetadata = useOData(props.url, http)
+    const { t } = useLanguage(props.lang)
 
     const loadingText = t('viewLoading',
         {
             name:
-                props.title ?
-                    props.title
+                props.title
+                    ? props.title
                     : new URL(props.url).hostname
-        });
+        })
 
     return <>
         {loadMetadata.error &&
@@ -47,5 +48,5 @@ export const OFluiODataProvider: React.FunctionComponent<OFluiODataProviderProps
             </HttpContext.Provider>
         }
 
-    </>;
+    </>
 }

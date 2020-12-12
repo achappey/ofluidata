@@ -6,4 +6,4 @@ export interface OFluiCheckboxProps extends ICheckboxProps {
 }
 
 export const OFluiCheckbox = (props: OFluiCheckboxProps) => <Checkbox {...props}
-  styles={{ root: { paddingBottom: 8, paddingTop: 8 } }} />
+    styles={{ root: { paddingBottom: 8, paddingTop: 8 } }} />

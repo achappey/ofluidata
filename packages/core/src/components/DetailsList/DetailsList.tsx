@@ -37,21 +37,24 @@ export const OFluiDetailsList = (props: OFluiDetailsListProps) => {
 
     const renderItemColumn = (item: any, _index: number, column: IColumn) => {
         const value = item[column.key]
-        const property = props.properties.find(d => d.name == column.key)
+        const property = props.properties.find(d => d.name === column.key)
 
         const itemClick = props.onItemClick
             ? () => props.onItemClick!(item)
             : undefined
 
-        return property != undefined ? <OFluiDisplayField
-            value={value}
-            property={property}
-            onClick={titleColumn == undefined || titleColumn != column.key || itemClick == undefined ?
-                (property.getForm || property.getList) && props.onLookupItemClick ?
-                    (val: any) => props.onLookupItemClick!(val, property) :
-                    undefined :
-                itemClick}
-        /> : <></>;
+        return property !== undefined
+            ? <OFluiDisplayField
+                value={value}
+                property={property}
+                onClick={titleColumn === undefined || titleColumn !== column.key || itemClick === undefined
+                    ? (property.getForm || property.getList) && props.onLookupItemClick
+                        ? (val: any) => props.onLookupItemClick!(val, property)
+                        : undefined
+                    : itemClick
+                }
+            />
+            : <></>
     }
 
     const renderHeader = (detailsHeaderProps: IDetailsHeaderProps,
@@ -59,9 +62,7 @@ export const OFluiDetailsList = (props: OFluiDetailsListProps) => {
         const content = defaultRender(
             {
                 ...detailsHeaderProps,
-                onRenderColumnHeaderTooltip:
-                    (tooltipHostProps: ITooltipHostProps) =>
-                        <TooltipHost {...tooltipHostProps} />
+                onRenderColumnHeaderTooltip: (tooltipHostProps: ITooltipHostProps) => <TooltipHost {...tooltipHostProps} />
             })
 
         return props.stickyHeader

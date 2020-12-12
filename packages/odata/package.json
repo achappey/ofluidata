@@ -1,6 +1,6 @@
 {
     "name": "ofluidata",
-    "version": "0.0.25",
+    "version": "0.0.27",
     "types": "lib/index.d.ts",
     "main": "lib/index.js",
     "scripts": {
@@ -10,22 +10,30 @@
         "lib"
     ],
     "devDependencies": {
-        "@fluentui/react": "^7.153.4",
+        "@fluentui/react": "^7.0.0",
         "@types/react": "^16.14.2",
         "@types/react-dom": "^16.9.9",
+        "@typescript-eslint/eslint-plugin": "^4.9.1",
+        "@typescript-eslint/parser": "^4.9.1",
         "core-js": "3.6.5",
+        "eslint": "^7.15.0",
+        "eslint-config-standard": "^16.0.2",
+        "eslint-plugin-import": "^2.22.1",
+        "eslint-plugin-node": "^11.1.0",
+        "eslint-plugin-promise": "^4.2.1",
+        "eslint-plugin-react": "^7.21.5",
         "react": "16.8.5",
         "react-dom": "16.8.5",
         "typescript": "^3.9.7"
     },
     "peerDependencies": {
-        "@fluentui/react": "^7.152.0",
+        "@fluentui/react": "^7.0.0",
         "react": "^16.8.0",
         "react-dom": "^16.8.0"
     },
     "dependencies": {
         "axios": "^0.21.0",
-        "ofluidata-core": "0.0.7",
+        "ofluidata-core": "0.0.15",
         "ofluidata-translations": "^0.0.1",
         "react-async-hook": "^3.6.2"
     }

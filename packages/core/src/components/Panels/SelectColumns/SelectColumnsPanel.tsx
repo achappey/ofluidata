@@ -1,9 +1,9 @@
-import * as React from "react";
-import { DefaultButton, IPanelProps, Panel, PrimaryButton } from "@fluentui/react";
-import { useLanguage } from "ofluidata-translations";
+import * as React from 'react'
+import { DefaultButton, IPanelProps, Panel, PrimaryButton } from '@fluentui/react'
+import { useLanguage } from 'ofluidata-translations'
 
-import { OFluiCheckbox } from "../../Controls/Checkbox/Checkbox";
-import { OFluiColumn } from "../../../types/oflui";
+import { OFluiCheckbox } from '../../Controls/Checkbox/Checkbox'
+import { OFluiColumn } from '../../../types/oflui'
 
 export interface OFluiSelectColumnsPanelProps extends IPanelProps {
     columns: OFluiColumn[],
@@ -12,38 +12,38 @@ export interface OFluiSelectColumnsPanelProps extends IPanelProps {
 }
 
 export const OFluiSelectColumnsPanel = (props: OFluiSelectColumnsPanelProps) => {
-    const { t } = useLanguage(props.lang);
+    const { t } = useLanguage(props.lang)
 
-    const [selected, setSelected] = React.useState<string[]>(props.selected.map(f => f.name));
+    const [selected, setSelected] = React.useState<string[]>(props.selected.map(f => f.name))
 
-    const addSelected = (t: OFluiColumn) => setSelected([...selected, t.name]);
-    const removeSelected = (t: OFluiColumn) => setSelected(selected.filter(e => e != t.name));
+    const addSelected = (t: OFluiColumn) => setSelected([...selected, t.name])
+    const removeSelected = (t: OFluiColumn) => setSelected(selected.filter(e => e !== t.name))
 
     const applyFilters = () => props
         .onApply(selected
             .map(h => props.columns
-                .find(a => a.name == h)!));
+                .find(a => a.name === h)!))
 
     const optionsContent = props.columns
         .map(t => {
-            const checked = selected.find(r => r == t.name) != undefined;
+            const checked = selected.find(r => r === t.name) !== undefined
 
             const onChange = (_e: any, isChecked: boolean) => isChecked
                 ? addSelected(t)
-                : removeSelected(t);
+                : removeSelected(t)
 
             return <OFluiCheckbox key={t.name}
                 label={t.name}
                 checked={checked}
                 onChange={onChange}
-            />;
-        });
+            />
+        })
 
-    const onClose = props.onDismiss ? () => props.onDismiss!() : undefined;
+    const onClose = props.onDismiss ? () => props.onDismiss!() : undefined
 
     const renderFooter = () => {
-        return props.columns != undefined ?
-            <>
+        return props.columns !== undefined
+            ? <>
                 <PrimaryButton
                     onClick={applyFilters}
                     style={{ marginRight: 8 }}
@@ -60,7 +60,7 @@ export const OFluiSelectColumnsPanel = (props: OFluiSelectColumnsPanelProps) => 
     }
 
     return <>
-        <Panel  {...props}
+        <Panel {...props}
             isFooterAtBottom={true}
             headerText={t('chooseColumns')}
             onRenderFooterContent={renderFooter}>
@@ -68,5 +68,5 @@ export const OFluiSelectColumnsPanel = (props: OFluiSelectColumnsPanelProps) => 
             {optionsContent}
 
         </Panel>
-    </>;
+    </>
 }

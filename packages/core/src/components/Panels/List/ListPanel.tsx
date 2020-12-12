@@ -1,16 +1,16 @@
-import * as React from "react";
+import * as React from 'react'
 
-import { IPanelProps } from "@fluentui/react";
+import { IPanelProps } from '@fluentui/react'
 
-import { OFluiPanel } from "../Panel/Panel";
-import { OFluiList } from "../../List/List";
-import { OFluiItemConfig, OFluiListConfig } from "../../../types/config";
+import { OFluiPanel } from '../Panel/Panel'
+import { OFluiList } from '../../List/List'
+import { OFluiItemConfig, OFluiListConfig } from '../../../types/config'
 
 export interface OFluiListPanelProps extends OFluiItemConfig, OFluiListConfig, IPanelProps {
     header?: any,
 }
 
-export const OFluiListPanel: React.FunctionComponent<OFluiListPanelProps> = (props) => {
+export const OFluiListPanel = (props: OFluiListPanelProps) => {
     return <>
         <OFluiPanel isOpen={props.isOpen}
             header={props.header}
@@ -20,5 +20,5 @@ export const OFluiListPanel: React.FunctionComponent<OFluiListPanelProps> = (pro
                 compact={true}
             />
         </OFluiPanel>
-    </>;
+    </>
 }

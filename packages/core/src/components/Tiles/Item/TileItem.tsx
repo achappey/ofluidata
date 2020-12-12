@@ -1,9 +1,9 @@
-import * as React from 'react';
+import * as React from 'react'
 import {
     AnimationClassNames, Link,
     Image, ImageFit, FontIcon
-} from '@fluentui/react';
-import { Tile } from '@uifabric/experiments';
+} from '@fluentui/react'
+import { Tile } from '@uifabric/experiments'
 
 export type OFluiTileItemProps = {
     title: string,
@@ -16,34 +16,34 @@ export type OFluiTileItemProps = {
 export const OFluiTileItem = (props: OFluiTileItemProps) => {
     const nameplate = <>
         {props.title}
-    </>;
+    </>
 
-    const foreground = props.icon ?
-        <FontIcon iconName={props.icon} /> :
-        props.image ?
-            <Image
+    const foreground = props.icon
+        ? <FontIcon iconName={props.icon} />
+        : props.image
+            ? <Image
                 imageFit={ImageFit.none}
                 src={props.image}
                 style={{ height: 41 }}
-            /> :
-            <></>;
+            />
+            : <></>
 
-    const linkProps = props.url ?
-        {
+    const linkProps = props.url
+        ? {
             href: props.url,
-            target: "parent"
-        } :
-        {
+            target: 'parent'
+        }
+        : {
             onClick: props.onClick
         }
 
     return (
         <Link {...linkProps} >
-            <Tile tileSize={"large"}
+            <Tile tileSize={'large'}
                 foreground={foreground}
                 className={AnimationClassNames.fadeIn400}
                 itemName={nameplate}
             />
         </Link>
-    );
-};
+    )
+}

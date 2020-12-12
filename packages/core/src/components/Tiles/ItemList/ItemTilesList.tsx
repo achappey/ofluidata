@@ -1,25 +1,25 @@
-import * as React from 'react';
-import { useState } from 'react';
+import * as React from 'react'
+import { useState } from 'react'
 
-import { DefaultPalette } from '@fluentui/react';
+import { DefaultPalette } from '@fluentui/react'
 
-import { OFluiButton, OFluiTile } from '../../../types/oflui';
-import { OFluiItemTilesConfig } from '../../../types/config';
-import { OFluiTilesList } from '../List/TilesList';
-import { OFluiCommandBar } from '../../CommandBar/CommandBar';
-import { OFluiDisplayItemForm } from '../../Forms/DisplayItem/DisplayItemForm';
+import { OFluiButton, OFluiTile } from '../../../types/oflui'
+import { OFluiItemTilesConfig } from '../../../types/config'
+import { OFluiTilesList } from '../List/TilesList'
+import { OFluiCommandBar } from '../../CommandBar/CommandBar'
+import { OFluiDisplayItemForm } from '../../Forms/DisplayItem/DisplayItemForm'
 
 export interface OFluiItemTilesListProps extends OFluiItemTilesConfig {
     onTileClick: (tile: OFluiTile) => void
 }
 
 const itemPaneButton: OFluiButton = {
-    key: "item",
-    icon: "Info"
+    key: 'item',
+    icon: 'Info'
 }
 
 export const OFluiItemTilesList = (props: OFluiItemTilesListProps) => {
-    const [showItemPane, setShowItemPane] = useState<boolean>(true);
+    const [showItemPane, setShowItemPane] = useState<boolean>(true)
 
     const itemToggle = {
         ...itemPaneButton,
@@ -27,8 +27,8 @@ export const OFluiItemTilesList = (props: OFluiItemTilesListProps) => {
         onClick: () => setShowItemPane(!showItemPane)
     }
 
-    const rootStyle = { paddingLeft: 24, paddingRight: 14 };
-    const contentClass = showItemPane ? "ms-sm8" : "ms-sm12";
+    const rootStyle = { paddingLeft: 24, paddingRight: 14 }
+    const contentClass = showItemPane ? 'ms-sm8' : 'ms-sm12'
 
     return <>
         <OFluiCommandBar
@@ -55,5 +55,5 @@ export const OFluiItemTilesList = (props: OFluiItemTilesListProps) => {
                 }
             </div>
         </div>
-    </>;
-};
+    </>
+}

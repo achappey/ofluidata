@@ -10,45 +10,45 @@ import { OFluiChoiceEditField } from './Choice/ChoiceEditField'
 import { OFluiLookupEditField } from './Lookup/LookupEditField'
 
 export type OFluiEditFieldProps = {
-  value: any,
-  column: OFluiColumn,
-  onUpdate: (newValue?: any) => void,
-  onValidation: (validation: OFluiFieldValidation | undefined) => void,
-  lang?: string,
-  autoFocus?: boolean
-  onSearch?: (query: string) => Promise<OFluiLookup[]>,
+    value: any,
+    column: OFluiColumn,
+    onUpdate: (newValue?: any) => void,
+    onValidation: (validation: OFluiFieldValidation | undefined) => void,
+    lang?: string,
+    autoFocus?: boolean
+    onSearch?: (query: string) => Promise<OFluiLookup[]>,
 }
 
 export const OFluiEditField = (props: OFluiEditFieldProps) => {
-  let content = <Label>{props.column.name}</Label>
+    let content = <Label>{props.column.name}</Label>
 
-  switch (props.column.type) {
-    case OFluiColumnType.text:
-    case OFluiColumnType.multiline:
-      content = <OFluiTextEditField {...props} />
-      break
-    case OFluiColumnType.datetime:
-      content = <OFluiDateTimeEditField {...props} />;
-      break;
-    case OFluiColumnType.number:
-      content = <OFluiNumberEditField {...props} />
-      break
-    case OFluiColumnType.boolean:
-      content = <OFluiBooleanEditField {...props} />
-      break
-    case OFluiColumnType.choice:
-      content = <OFluiChoiceEditField {...props} />
-      break
-    case OFluiColumnType.lookup:
-      content = <OFluiLookupEditField {...props} />
-      break
-    default:
-      break
-  }
+    switch (props.column.type) {
+        case OFluiColumnType.text:
+        case OFluiColumnType.multiline:
+            content = <OFluiTextEditField {...props} />
+            break
+        case OFluiColumnType.datetime:
+            content = <OFluiDateTimeEditField {...props} />
+            break
+        case OFluiColumnType.number:
+            content = <OFluiNumberEditField {...props} />
+            break
+        case OFluiColumnType.boolean:
+            content = <OFluiBooleanEditField {...props} />
+            break
+        case OFluiColumnType.choice:
+            content = <OFluiChoiceEditField {...props} />
+            break
+        case OFluiColumnType.lookup:
+            content = <OFluiLookupEditField {...props} />
+            break
+        default:
+            break
+    }
 
-  return (
-    <>
-      {content}
-    </>
-  )
+    return (
+        <>
+            {content}
+        </>
+    )
 }

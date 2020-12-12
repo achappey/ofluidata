@@ -1,4 +1,4 @@
-export * from './components/Fields'
+export * from './components/Fields/index'
 
 export * from './components/MessageBar/Error/ErrorMessageBar'
 
@@ -28,6 +28,7 @@ export * from './components/Tiles/ItemList/ItemTilesList'
 
 export * from './components/Controls/Buttons/IconButton/IconButton'
 export * from './components/Controls/Checkbox/Checkbox'
+export * from './components/Controls/ErrorMessage/ErrorMessage'
 
 export * from './components/Forms/DisplayItem/DisplayItemForm'
 export * from './components/Forms/EditItem/EditItem'

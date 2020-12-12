@@ -1,9 +1,9 @@
 import * as React from 'react'
-import { OFluiODataTilesConfig } from '../../types/config';
-import { OFluiHttpClient } from '../../types/http';
-import { OFluiHttpProvider } from '../Providers/Http/HttpProvider';
-import { OFluiODataProvider } from '../Providers/OData/ODataProvider';
-import { OFluiODataTilesCore } from './ODataTilesCore';
+import { OFluiODataTilesConfig } from '../../types/config'
+import { OFluiHttpClient } from '../../types/http'
+import { OFluiHttpProvider } from '../Providers/Http/HttpProvider'
+import { OFluiODataProvider } from '../Providers/OData/ODataProvider'
+import { OFluiODataTilesCore } from './ODataTilesCore'
 
 export interface OFluiODataTilesProps {
     url: string,
@@ -21,5 +21,5 @@ export const OFluiODataTiles = (props: OFluiODataTilesProps) => {
 
             </OFluiODataProvider>
         </OFluiHttpProvider>
-    );
-};
+    )
+}

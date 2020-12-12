@@ -1,13 +1,13 @@
-import * as React from "react";
+import * as React from 'react'
 
-import { DefaultButton, IPanelProps, PrimaryButton, Spinner } from "@fluentui/react";
+import { DefaultButton, IPanelProps, PrimaryButton, Spinner } from '@fluentui/react'
 
-import { OFluiColumn, OFluiFieldValidation, OFluiLookup } from "../../../types/oflui";
-import { OFluiPanel } from "../Panel/Panel";
-import { OFluiEditItemForm } from "../../Forms/EditItem/EditItem";
-import { useLanguage } from "ofluidata-translations";
-import { toFieldValidation } from "../../../utilities/oflui";
-import { OFluiItemConfig } from "../../../types/config";
+import { OFluiColumn, OFluiFieldValidation, OFluiLookup } from '../../../types/oflui'
+import { OFluiPanel } from '../Panel/Panel'
+import { OFluiEditItemForm } from '../../Forms/EditItem/EditItem'
+import { useLanguage } from 'ofluidata-translations'
+import { toFieldValidation } from '../../../utilities/oflui'
+import { OFluiItemConfig } from '../../../types/config'
 
 export interface OFluiEditItemPanelProps extends OFluiItemConfig, IPanelProps {
     item: any,
@@ -20,12 +20,13 @@ interface Validation {
     validation?: OFluiFieldValidation
 }
 
-export const OFluiEditItemPanel: React.FunctionComponent<OFluiEditItemPanelProps> = (props) => {
-    const { t } = useLanguage(props.lang);
-    const [currentItem, setCurrentItem] = React.useState<any>(props.item);
-    const [errorMessage, setErrorMessage] = React.useState<string | undefined>(undefined);
+export const OFluiEditItemPanel: React.FunctionComponent<OFluiEditItemPanelProps> = (props: OFluiEditItemPanelProps) => {
+    const { t } = useLanguage(props.lang)
+    const [saving, setSaving] = React.useState<boolean>(false)
+    const [currentItem, setCurrentItem] = React.useState<any>(props.item)
+    const [errorMessage, setErrorMessage] = React.useState<string | undefined>(undefined)
 
-    const columns = props.columns.filter(r => !r.computed);
+    const columns = props.columns.filter(r => !r.computed)
 
     const [validations, setValidations] = React.useState<Validation[]>(columns
         .map(b => {
@@ -33,53 +34,54 @@ export const OFluiEditItemPanel: React.FunctionComponent<OFluiEditItemPanelProps
                 column: b,
                 validation: toFieldValidation(b, currentItem[b.name])
             }
-        }));
+        }))
 
     const onValidation = (column: OFluiColumn, validation?: OFluiFieldValidation) => {
         setValidations([
-            ...validations.filter(a => a.column.name != column.name),
+            ...validations.filter(a => a.column.name !== column.name),
             {
                 column: column,
                 validation: validation
             }
-        ]);
+        ])
     }
 
     const isValid = validations
-        .filter(g => g.validation != undefined).length == 0;
+        .filter(g => g.validation !== undefined).length === 0
 
-    const onUpdated = (item: any) => setCurrentItem(item);
+    const onUpdated = (item: any) => setCurrentItem(item)
 
-    const getItem = props.readItem && props.item ?
-        (item: any) => props
+    const getItem = props.readItem && props.item
+        ? (item: any) => props
             .readItem!(item)
         : async (item: any) => item
 
     React.useEffect(() => {
-        let isSubscribed = true;
+        let isSubscribed = true
 
         if (props.isOpen) {
             getItem(props.item)
                 .then(result => (isSubscribed ? setCurrentItem(result) : null))
-                .catch(error => (isSubscribed ? setErrorMessage(error.toString()) : null));
-        }
-        else {
-            setCurrentItem(undefined);
+                .catch(error => (isSubscribed ? setErrorMessage(error.toString()) : null))
+        } else {
+            setCurrentItem(undefined)
         }
 
-        return () => { isSubscribed = false };
-    }, [props.isOpen]);
+        return () => { isSubscribed = false }
+    }, [props.isOpen])
 
     const saveItem = async () => {
         try {
-            await props.onSave(currentItem);
-        }
-        catch (error) {
-            setErrorMessage(error.toString());
+            setSaving(true)
+            await props.onSave(currentItem)
+        } catch (error) {
+            setErrorMessage(error.toString())
+        } finally {
+            setSaving(false)
         }
     }
 
-    const onDismiss = props.onDismiss ? () => props.onDismiss!() : undefined;
+    const onDismiss = props.onDismiss ? () => props.onDismiss!() : undefined
 
     const renderFooter = () => <>
 
@@ -87,7 +89,7 @@ export const OFluiEditItemPanel: React.FunctionComponent<OFluiEditItemPanelProps
             <PrimaryButton
                 text={t('save')}
                 style={{ marginRight: 8 }}
-                disabled={!isValid}
+                disabled={!isValid || saving}
                 onClick={saveItem}
             />
         }
@@ -98,8 +100,7 @@ export const OFluiEditItemPanel: React.FunctionComponent<OFluiEditItemPanelProps
                 onClick={onDismiss}
             />
         }
-    </>;
-
+    </>
 
     return <>
         <OFluiPanel {...props}
@@ -108,11 +109,11 @@ export const OFluiEditItemPanel: React.FunctionComponent<OFluiEditItemPanelProps
             isFooterAtBottom={true}
             onRenderFooterContent={renderFooter}>
 
-            {!currentItem && !errorMessage &&
+            {((!currentItem && !errorMessage) || saving) &&
                 <Spinner />
             }
 
-            {currentItem &&
+            {currentItem && !saving &&
                 <OFluiEditItemForm {...props}
                     item={currentItem}
                     columns={columns}
@@ -122,5 +123,5 @@ export const OFluiEditItemPanel: React.FunctionComponent<OFluiEditItemPanelProps
                 />
             }
         </OFluiPanel>
-    </>;
+    </>
 }
